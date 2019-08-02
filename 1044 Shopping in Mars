@@ -1,0 +1,75 @@
+//2019-8-2 一个测试用例没过
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+
+int n,m;
+int sum[100010] = {0};
+struct Mem
+{
+	int left,right;
+	int del;
+}mem[100010];
+
+bool cmp(Mem m1,Mem m2)
+{
+	return m1.del < m2.del;
+}
+
+int binarySearch(int left,int x)
+{
+	int right = n,mid;
+	while(left < right)
+	{
+		mid = (left + right) / 2;
+		if(sum[mid] == x) return mid;
+		if(sum[mid] > x) right = mid;
+		if(sum[mid] < x) left  = mid+1;
+	}
+	return left;
+}
+int main()
+{
+	int i;
+	scanf("%d%d",&n,&m);
+	sum[0] = 0;
+	for(i=1;i<=n;i++)
+	{
+		int tmp;
+		scanf("%d",&tmp);
+		sum[i] = sum[i-1] + tmp;
+		//printf("sum%d:%d\n",i,sum[i]);
+	}
+	bool flag = false;
+	int count = 0;
+	int index = 0;
+	for(i=0;i<n;i++)
+	{
+		index = binarySearch(i,sum[i]+m);
+		int del = sum[index] - sum[i];
+		if(del == m)
+		{
+			printf("%d-%d\n",i+1,index);
+			flag = true;
+		}
+		if(del>m)
+		{
+			mem[count].left = i+1;
+			mem[count].right = index;
+			mem[count].del = del;
+			count++;
+		}
+	}
+	if(!flag)
+	{
+		sort(mem,mem+count,cmp);
+		i = 0;
+		while(mem[i].del == mem[0].del)
+		{
+			printf("%d-%d\n",mem[i].left,mem[i].right);
+			i++;
+		}
+	}
+	return 0;
+}
