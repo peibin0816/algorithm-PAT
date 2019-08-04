@@ -1,0 +1,33 @@
+//用了找右边最小值的方法，其实可以直接匹配排序后的位置，与给的顺序一样的话就是找的数。
+#include<iostream>
+using namespace std;
+const int INF = 0x7fffffff;
+int num[100005],pos[100005],rightmin[100005],n;
+int main() {
+	cin >> n;
+	int total = 0;
+	int lmax = -1,rmin = INF;
+	for(int i = 0; i<n; i++) {
+		cin >> num[i];
+	}
+	rightmin[n-1] = INF;
+	for(int i=n-2;i>=0;i--)
+		rightmin[i] =( (rightmin[i+1] > num[i+1]) ? num[i+1] : rightmin[i+1]);
+	rmin = rightmin[1];
+	//cout << rmin; 
+	for(int i = 0; i<n; i++){
+		if(lmax < num[i] && rmin>num[i]) 
+			pos[total++] = num[i];
+		//cout <<" num["<<i<<"] "<< num[i]<<" lmax "<<lmax<< " rmin "<<rmin<<endl; 
+		if(num[i] > lmax) lmax = num[i];
+		rmin = rightmin[i+1];		
+	}	
+	cout << total <<endl;
+	for(int i=0;i<total;i++) 
+	{
+		cout << pos[i];
+		if(i!=total-1) cout<<" ";
+	}
+	cout << endl;
+	return 0;
+}
