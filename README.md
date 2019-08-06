@@ -3,17 +3,14 @@
 #Unfamiliar word
 
 partition 
-
 pivot  
- 
 distinct  
-
 Specification 
- 
 consecutive 
-
 elevator  
 denote 
 specified 
+decimal
+
 
 
