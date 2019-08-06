@@ -1,0 +1,78 @@
+#第一次考虑不全
+#include<iostream>
+#include<algorithm>
+using namespace std;
+typedef long long ll;
+
+struct Fraction{
+	int up;
+	int down;
+}fra[105];
+ll gcd(ll a,ll b){
+	return b==0?a:gcd(b,a%b);
+}
+int main() {
+	int n;
+	cin >> n;
+	for(int i=0;i<n;i++){
+		scanf("%d/%d",&fra[i].up,&fra[i].down);
+	}
+	ll upSum = 0,downSum=1;
+	for(int i=0;i<n;i++){
+		downSum *= fra[i].down;
+		int total = fra[i].up;
+		for(int j=0;j<n;j++){
+			if(j!=i) total *= fra[j].down;
+		}
+		upSum += total;		
+	}
+	ll max = gcd(upSum,downSum);
+	upSum /= max ;downSum /= max;
+	if(upSum == 0) printf("0\n");
+	else if(downSum == 1) printf("%lld\n",upSum);
+	else if(upSum < downSum) printf("%lld/%lld\n",upSum,downSum);
+	else if(upSum > downSum) 
+			printf("%lld %lld/%lld\n" ,upSum/downSum,upSum-((upSum/downSum)*downSum),downSum);	
+	return 0;
+}
+
+
+
+#第二次
+
+#include<iostream>
+#include<algorithm>
+using namespace std;
+typedef long long ll;
+
+struct Fraction{
+	int up;
+	int down;
+}fra[105];
+ll gcd(ll a,ll b){
+	return b==0?a:gcd(b,a%b);
+}
+int main() {
+	ll n,upSum = 0,downSum=1,gcdNum,up,down;
+	cin >> n;
+	for(int i=0;i<n;i++){
+		scanf("%lld/%lld",&up,&down);
+		gcdNum = gcd(up,down);
+		up = up/gcdNum;
+		down = down/gcdNum;
+		upSum = up*downSum + down*upSum;
+		downSum = downSum * down;
+		gcdNum = gcd(upSum,downSum);
+		upSum = upSum/gcdNum;
+		downSum = downSum/gcdNum;
+	}
+	ll integer = upSum/downSum;
+	upSum = upSum-( integer*downSum);
+	if(integer != 0 ){
+		printf("%lld",integer);
+		if(upSum!=0) printf(" ");
+	}
+	if(upSum!=0) printf("%lld/%lld",upSum,downSum);
+	if(integer == 0 && upSum ==0) printf("0");	
+	return 0;
+}
