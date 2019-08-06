@@ -1,9 +1,19 @@
 # pat  pat刷题笔记
 
 #Unfamiliar word
+
 partition 
-pivot 
+
+pivot  
+ 
 distinct  
+
 Specification 
+ 
 consecutive 
+
+elevator  
+denote 
+specified 
+
 
