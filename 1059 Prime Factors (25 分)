@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+typedef long long ll;
+ll pos[100005]={0};
+int main(){
+	ll num;
+	cin >> num;
+	if(num==1){
+		cout << "1=1";
+		return 0;
+	}
+	ll temp = num,i=1,count=0;
+	while((temp!=1)&&(i<=num)){
+		if(temp%i==0){
+			temp = temp/i;
+			if(pos[i]==0) count++;
+			pos[i]++;
+			i=2;
+		}else i++;
+	}
+	i=1;
+	if(count>0) cout <<num<<"=";
+	while(count--){
+		if(pos[i]!= 0){
+			if(pos[i] == 1) 
+				if(i!=1) cout << i;
+			else if(pos[i] > 1) cout << i <<"^"<< pos[i];
+			if(i!=1 && count>0) cout <<"*";
+		}
+		i++;	
+	}
+	return 0;
+}
