@@ -11,6 +11,14 @@ elevator
 denote 
 specified 
 decimal
-
-
-
+reversible 
+prime 
+Quadratic  
+probing  
+collisions 
+distinct  
+respectively 
+corresponding 
+positions  
+Consecutive 
+exponent  
