@@ -1,0 +1,40 @@
+#include <iostream>
+#include <cmath>
+using namespace std; 
+int ntox(int n,int d){  
+	int x[20],ans=0,i=0,p =1;
+	while(n>0){
+		x[i++] = n%d;
+		n /= d;
+	}
+	while(i--){
+		ans += (x[i]*p);
+		p *= d;
+	}
+	//cout<<ans<<endl;
+	return ans;
+}
+bool isPrime(int n){
+	if(n<=1) return false;
+	int sqr = (int)sqrt(1.0*n);
+	for(int i=2;i<=sqr;i++){
+		if(n%i==0) return false;
+	}
+	return true;
+}
+bool isRevPrime(int n,int d){
+	if(!isPrime(n)) return false;
+	int x = ntox(n,d);
+	if(!isPrime(x)) return false;
+	return true;
+}
+
+int main() {
+	int n,d;
+	while(scanf("%d",&n)!=EOF,n>0){
+		cin >> d;
+		if(isRevPrime(n,d)) cout<<"Yes"<<endl;	
+		else cout<<"No"<<endl;	
+	}	
+	return 0;
+}
