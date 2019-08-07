@@ -1,0 +1,76 @@
+#找不出自己的错误
+#include <iostream>
+#include <cmath>
+using namespace std; 
+int poss[11111]={0};
+bool isPrime(int n){
+	if( n<= 1) return false;
+	int sqr = (int)sqrt(1.0*n);
+	for(int i=2;i<=sqr;i++){
+		if(n%i==0) return false;
+	}
+	return true;
+}
+int main() {
+	int m,n,x;
+	cin >> m >> n;
+	while(!isPrime(m)) m++;
+	for(int i=0;i<n;i++){
+		cin >> x ;
+		int M = x;
+		int pos = 0,step = 1;
+		do{
+			pos = M % m;
+			if(poss[pos] == 0) {
+				poss[pos] = 1;
+				cout << pos;
+				break;
+			}
+			M = M + step*step;
+			step++;	
+		}while(step < m);
+		if(step == m ) cout << "-";
+		if(i!=n-1) cout <<" ";		
+	}
+	return 0;
+}
+
+
+
+#答案
+#include <iostream>
+#include <cmath>
+using namespace std; 
+
+int poss[11111]={0};
+int m,n,x;
+bool isPrime(int n){
+	if( n<= 1) return false;
+	int sqr = (int)sqrt(1.0*n);
+	for(int i=2;i<=sqr;i++){
+		if(n%i==0) return false;
+	}
+	return true;
+}
+void insert(int x){
+	for(int step = 0;step<m;step++){
+		int M = (x+step*step) %m;
+		if(poss[M]==0){
+			poss[M]=1;
+			cout << M;
+			return;
+		}
+	}
+	cout << "-";
+}
+int main() {
+
+	cin >> m >> n;
+	while(!isPrime(m)) m++;
+	for(int i=0;i<n;i++){
+		cin >> x ;
+		insert(x);
+		if(i!=n-1) cout <<" ";		
+	}
+	return 0;
+}
