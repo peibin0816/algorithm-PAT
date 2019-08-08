@@ -7,12 +7,6 @@ bool isPar() {
 	}
 	return true;
 }
-void show() {
-	for(int i=0; i<len; i++) {
-		cout << num[len-i-1];
-	}
-	cout<<endl;
-}
 int main() {
 	string str;
 	int k,index=0;
@@ -20,10 +14,8 @@ int main() {
 	len = str.length();
 	for(int i=0; i<len; i++) {
 		num[i] = str[len-1-i] - '0';
-		tmp[i] = num[i];
 	}
-	bool flag = true;
-	while(flag && (index < k)) {
+	while(index < k) {
 		if(isPar()) break;
 		for(int i=0;i<len;i++){
 			tmp[i] = num[i];
@@ -45,7 +37,9 @@ int main() {
 		}
 		index++;
 	}
-	show();
-	cout<<index;
+	for(int i=0; i<len; i++) {
+		cout << num[len-i-1];
+	}
+	cout<<endl<<index;
 	return 0;
 }
