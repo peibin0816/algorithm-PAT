@@ -1,0 +1,30 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+char name[40005][5];
+int stuNum,couNum;
+vector<int> cousStu[2505];
+bool cmp(int a,int b){
+	return strcmp(name[a],name[b])<0;
+}
+int main() {
+	scanf("%d %d",&stuNum,&couNum);
+	int CouId,choNum;
+	for(int i=0;i<stuNum;i++){
+		scanf("%s %d",name[i],&choNum);
+		for(int j=0;j<choNum;j++){
+			scanf("%d",&CouId);
+			cousStu[CouId].push_back(i);
+		}
+	}
+	for(int i=1;i<=couNum;i++){
+		printf("%d %d\n",i,cousStu[i].size());
+		sort(cousStu[i].begin(), cousStu[i].end(), cmp);
+		for(int j=0;j<cousStu[i].size();j++){
+			printf("%s\n",name[cousStu[i][j]]);
+		}
+	}
+	return 0;
+}
