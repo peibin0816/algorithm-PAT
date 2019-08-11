@@ -28,3 +28,4 @@ Palindromic
 reversed  
 registered  
 indices 
+chopping 
