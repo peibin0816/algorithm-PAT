@@ -1,0 +1,92 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	int n;
+	string str1,str2;
+	cin >> n >> str1 >> str2;
+	int len1 = str1.length();
+	int len2 = str2.length();
+	int intlen1 = 0,intlen2 = 0;
+	while(str1.length()>0 && str1[0]=='0'){
+		str1.erase(str1.begin());
+	}
+	while(str2.length()>0 && str2[0]=='0'){
+		str2.erase(str2.begin());
+	}
+	for(int i=0;i<len1;i++){
+		if(str1[i] == '.') {
+			break;
+		}else intlen1++;
+	}
+	for(int i=0;i<len2;i++){
+		if(str2[i] == '.') {
+			break;
+		}else intlen2 ++;
+	}
+	str1.erase(intlen1,1);
+	str2.erase(intlen2,1);
+	if(intlen1<intlen2)	 intlen1=intlen2;
+	len1 = str1.length();
+	len2 = str2.length();
+	if(n > len1) str1.insert(n,'0',n-len1);
+	if(n > len2) str2.insert(n,'0',n-len2);	
+	str1 = "0." + str1.substr(0,n) + "*10^" + to_string(intlen1);
+	str2 = "0." + str2.substr(0,n) + "*10^" + to_string(intlen1);
+	if(str1==str2){
+		cout <<"YES " <<str1;
+	}else cout  <<"NO " << str1 <<" "<<str2;
+	return 0;
+}
+
+
+#改正后
+#include <iostream>
+#include <string>
+using namespace std;
+int n;
+string deal(string str){
+	int e = 0,k=0;
+	while(str.length() > 0 && str[0]=='0' ){
+		str.erase(str.begin());
+	}
+	if(str[0]=='.'){
+		str.erase(str.begin());
+		while(str.length()>0 && str[0]=='0'){
+			str.erase(str.begin());
+			e--;
+		}
+	}
+	else{
+		while(k<str.length() && str[k] != '.'){
+			k++;
+			e++;
+		}
+		if(k<str.length()){
+			str.erase(str.begin()+k);
+		}
+	}
+	if(str.length()==0) e=0;
+	int num=0;
+	k=0;
+	string res;
+	while(num<n){
+		if(k<str.length()) 
+			res += str[k++];
+		else res+='0';
+		num++; 
+	}
+	res += ("*10^"+to_string(e));
+	return res;
+}
+int main() {
+	
+	string str1,str2;
+	cin >> n >> str1 >> str2;
+	str1 = deal(str1);
+	str2 = deal(str2);
+	if(str1==str2) cout<< "YES 0."<<str1;
+	else cout << "NO 0." << str1 << " 0." << str2; 
+	return 0;
+}
