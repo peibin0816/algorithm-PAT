@@ -88,5 +88,6 @@ int main() {
 	str2 = deal(str2);
 	if(str1==str2) cout<< "YES 0."<<str1;
 	else cout << "NO 0." << str1 << " 0." << str2; 
+	
 	return 0;
 }
