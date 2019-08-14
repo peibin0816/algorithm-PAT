@@ -28,4 +28,8 @@ Palindromic
 reversed  
 registered  
 indices 
-chopping 
+chopping
+tret
+mutual 
+
+ 
