@@ -1,0 +1,73 @@
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#include <map>
+using namespace std;
+const int maxn = 100010;
+struct Node{
+	int add,next,data;
+	int order,right;
+}node[maxn];
+bool cmp(Node n1,Node n2){
+	return n1.order < n2.order;
+}
+map<int,int> mp;
+int main() {
+	for(int i=0;i<maxn;i++){
+		node[i].order = maxn;
+	}
+	int n,begin,address;
+	cin >> begin >> n;
+	for(int i=0;i<n;i++){
+		cin>>address;
+		cin>>node[address].data>>node[address].next;
+		node[address].add = address;
+	}
+	int p = begin,count=0;
+	while(p!=-1){
+		node[p].order = (++count);
+		p = node[p].next;
+	}
+	sort(node,node+maxn,cmp);
+	int index1=0,index2=0,begin1 = -1,begin2=-1;
+	for(int i = 0;i<count;i++){
+		int temp = abs(node[i].data);
+		if(mp[temp] == 0){
+			if(i==0) begin1 = 0;
+			else
+				node[index1].right = i;
+				node[index1].next = node[i].add;
+			node[i].next = -1;
+			index1 = i;
+		}else{
+			if(begin2==-1) {
+				begin2 = i;
+			}else{
+				node[index2].right = i;	
+				node[index2].next = node[i].add;			
+			}
+			node[i].next = -1;
+			index2 = i;			
+		}
+		mp[temp]++;
+	}
+	p = begin1;
+	while(p!= -1){
+		if(node[p].next == -1){
+			printf("%05d %d -1\n",node[p].add,node[p].data);
+			break;
+		}
+		else printf("%05d %d %05d\n",node[p].add,node[p].data,node[p].next);
+		p = node[p].right;
+	}
+	p = begin2;
+	while(p!= -1){
+		if(node[p].next == -1){
+			printf("%05d %d -1\n",node[p].add,node[p].data);
+			break;
+		}
+		else printf("%05d %d %05d\n",node[p].add,node[p].data,node[p].next);
+		p = node[p].right;
+	}
+	return 0;
+}
