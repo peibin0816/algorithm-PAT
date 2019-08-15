@@ -31,5 +31,16 @@ indices
 chopping
 tret
 mutual 
+synonyms 
+cops 
+validating
+avatar 
+carriage 
+alphanumerical 
+occurring 
+lexicographically 
+narrow 
+sampled 
+insensitive
 
- 
+
