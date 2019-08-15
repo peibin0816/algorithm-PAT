@@ -1,0 +1,35 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+const int maxn = 100010;
+struct Node{
+	int add,next;
+	char data;
+	int flag;
+}node[maxn];
+
+int main() {
+	for(int i=0;i<maxn;i++){
+		node[i].flag = -1;
+	}
+	int b1,b2,n,address;
+	cin >> b1 >> b2 >> n;
+	for(int i=0;i<n;i++){
+		cin >> address;
+		scanf(" %c %d",&node[address].data,&node[address].next);
+		node[address].add = address;
+	} 
+	int p = b1;
+	while(p!=-1){
+		node[p].flag = 1;
+		p = node[p].next;
+	}
+		p=b2;
+	while(p!=-1){
+		if(node[p].flag==1) break;
+		p = node[p].next;
+	}
+	if(p != -1) printf("%05d\n",p);
+	else printf("-1\n");
+	return 0;
+}
