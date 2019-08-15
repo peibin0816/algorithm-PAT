@@ -41,6 +41,16 @@ occurring
 lexicographically 
 narrow 
 sampled 
-insensitive
+insensitive 
+Mice 
+determined 
+permutation  
+sake 
+suffix 
+adjacent 
+duplicated 
+
+
+
 
 
