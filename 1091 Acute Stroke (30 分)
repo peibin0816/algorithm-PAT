@@ -1,0 +1,151 @@
+##我写的
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <cmath>
+const int maxn = 1000;
+
+using namespace std;
+struct node{
+	int x,y;
+}Node,S,temp;
+
+int m,n,l,t;
+int x_index[8] = {0,1,-1,0,-1,1,1,-1};
+int y_index[8] = {1,0,0,-1,-1,-1,1,1};
+
+int matrix[1290][130];
+int inq[1290][130];
+
+bool isright(int x,int y){
+	if(x<0 || y<0) return false;
+	if(x>=m || y>=n) return false;
+	return true;
+}
+
+int BFS(int x,int y){
+	
+	int count = 0;
+	queue<node> q;
+	Node.x = x;Node.y = y;
+	q.push(Node);
+	inq[x][y] = 1;
+	count++;
+	while(!q.empty()){
+		temp = q.front();
+		q.pop();
+		for(int i=0;i<8;i++){
+			for(int j=0;j<8;j++){
+				int newX = temp.x + x_index[i];
+				int newY = temp.y + y_index[j];
+				if(isright(newX,newY) && matrix[newX][newY] == 1 && inq[newX][newY] == 0){
+					Node.x = newX;Node.y = newY;
+					q.push(Node);
+					inq[newX][newY] = 1;
+					count++;
+				}
+			}
+		} 
+	}	
+	return count;
+}
+int main() {
+	int count = 0;
+	cin >> m  >> n >> l >> t;
+	while(l--){
+		matrix[maxn][maxn]={0};
+		for(int i=0;i<m;i++){
+			for(int j =0;j<n;j++){
+				scanf("%d",&matrix[i][j]);
+				inq[i][j] = 0;
+			}
+		}
+		for(int i=0;i<m;i++){
+			for(int j =0;j<n;j++){
+				if(matrix[i][j] == 1 && inq[i][j] == 0){
+					int tmp = BFS(i,j);
+					//cout<<tmp<<"-----"<<endl;
+					if(tmp >= t)
+						count += tmp;
+				}
+			}
+		}
+	}
+	printf("%d",count);
+	return 0;
+}
+
+
+##修改过的
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <cmath>
+using namespace std;
+struct node{
+	int x,y,z;
+}Node,S,temp;
+
+int m,n,l,t;
+int x_index[6] = {0,0,0,0,1,-1};
+int y_index[6] = {0,0,1,-1,0,0};
+int z_index[6] = {1,-1,0,0,0,0};
+
+int matrix[1290][130][62];
+int inq[1290][130][62];
+
+bool isright(int x,int y,int z){
+	if(x<0 || y<0 || z<0) return false;
+	if(x>=m || y>=n || z>=l) return false;
+	return true;
+}
+int BFS(int x,int y,int z){
+	
+	int count = 0;
+	queue<node> q;
+	Node.x = x;Node.y = y;Node.z = z;
+	q.push(Node);
+	inq[x][y][z] = 1;
+	count++;
+	while(!q.empty()){
+		temp = q.front();
+		q.pop();
+		for(int i=0;i<6;i++){
+				int newX = temp.x + x_index[i];
+				int newY = temp.y + y_index[i];
+				int newZ = temp.z + z_index[i];
+				if(isright(newX,newY,newZ) && matrix[newX][newY][newZ] == 1 && inq[newX][newY][newZ] == 0){
+					Node.x = newX;Node.y = newY;Node.z = newZ;
+					q.push(Node);
+					inq[newX][newY][newZ] = 1;
+					count++;
+				}
+			
+		} 
+	}	
+	return count;
+}
+int main() {
+	int count = 0;
+	cin >> m  >> n >> l >> t;
+	for(int i=0;i<l;i++){
+		for(int j=0;j<m;j++){
+			for(int k=0;k<n;k++){
+				scanf("%d",&matrix[j][k][i]);
+				inq[j][k][i] = 0;
+			}					
+		}
+	}
+	for(int i=0;i<l;i++){
+		for(int j =0;j<m;j++){
+			for(int k =0;k<n;k++)
+				if(matrix[j][k][i] == 1 && inq[j][k][i] == 0){
+					int tmp = BFS(j,k,i);
+					if(tmp >= t) count += tmp;
+			}
+		}
+	}	
+	printf("%d",count);
+	return 0;
+}
+
