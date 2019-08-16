@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+//n:总和 k:项数 p:指数 maxSumK:项数和的最大值 
+int n,k,p,maxSumK = -1; 
+vector<int> temp,ans,fac;
+int init(){
+	int tmp = 0,i=0;
+	while(tmp <= n){
+		fac.push_back(tmp);
+		tmp = pow(++i,p);
+	}
+}
+//index：当前处理整数，nowK为当前已处理k个数，
+//sum表示和，sumK表示项数和，p表示当前指数 
+void DFS(int index,int nowK,int sum,int sumK){
+	if(nowK == k && sum == n)  {
+		if(sumK > maxSumK){
+			maxSumK = sumK;
+			ans = temp;
+		}
+		return ;
+	}
+	if(nowK > k || sum > n) return; 
+	if(index - 1>=0){
+		temp.push_back(index);
+		DFS(index,nowK+1,sum+fac[index],sumK+index);
+		temp.pop_back();
+		DFS(index-1,nowK,sum,sumK);
+	}
+}
+
+int main() {
+	cin>>n>>k>>p;
+	init();
+	DFS(fac.size()-1,0,0,0);
+	if(maxSumK == -1) cout << "Impossible" << endl;
+	else{
+		printf("%d = ",n); 
+		for(int i=0;i<ans.size();i++){
+			if(i!=0) cout << " + " ;
+			cout << ans[i] <<"^"<<p;
+		}
+	}	
+	return 0;
+}
