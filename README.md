@@ -49,8 +49,11 @@ sake
 suffix 
 adjacent 
 duplicated 
-
-
-
-
+factorization 
+acute 
+stroke 
+volume 
+slice
+slices of a brain
+threshold 
 
