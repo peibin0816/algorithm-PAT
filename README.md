@@ -56,4 +56,15 @@ volume
 slice
 slices of a brain
 threshold 
+postorder  inorder 
+traversal 
+implemented 
+recursive 
+Howell 
+Homebrew 
+whiteboard 
+invert 
+indices 
+adjacent 
+chain 
 
