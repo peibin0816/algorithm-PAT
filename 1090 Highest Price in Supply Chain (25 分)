@@ -29,7 +29,7 @@ int main() {
 		cin>>k;
 		if(k==-1) root = i;
 		else{
-			node[k].child.push_back(i);
+		  	node[k].child.push_back(i);
 		}
 	}
 	DFS(root,0);
