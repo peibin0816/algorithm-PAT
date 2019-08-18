@@ -67,4 +67,5 @@ invert
 indices 
 adjacent 
 chain 
-
+hierarchy  
+pedigree 
