@@ -1,0 +1,60 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cmath>
+using namespace std;
+const int maxn = 100010;
+int n,m,maxlayer = 1,maxSum = 1; 
+struct tree{
+	vector<int> child;
+	int layer;
+}node[maxn];
+int findroot[maxn] = {0},indexlayer = 0,indexSum = 0;
+void BFS(int root){
+	queue<int> q;
+	q.push(root);
+	while(!q.empty()){
+		int front = q.front();
+		//cout << front << "*";
+		if(node[front].layer == indexlayer){
+			indexSum++;
+			if(indexSum > maxSum){
+				maxSum = indexSum;
+				maxlayer = node[front].layer;
+			}
+		}
+		else{
+			indexSum = 1;
+			indexlayer = node[front].layer;
+		}
+		q.pop();
+		for(int i=0;i<node[front].child.size();i++){
+			int chirld = node[front].child[i];
+			node[chirld].layer = node[front].layer +1;
+			q.push(chirld);
+		}
+		
+	}
+}
+int main() {
+	cin>>n>>m;
+	int id,k,child,root;
+	for(int i=0;i<m;i++){
+		cin>>id>>k;
+		for(int j=0;j<k;j++){
+			cin >> child;
+			findroot[child] ++;
+			node[id].child.push_back(child);
+		}		
+	}
+	for(int i=1;i<=n;i++){
+		if(findroot[i] == 0){
+			root = i;
+			break;
+		}
+	}
+	node[root].layer = 1;
+	BFS(root);
+	printf("%d %d\n",maxSum,maxlayer);
+	return 0;
+}
