@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+using namespace std;
+const int maxn = 110;
+struct tree{
+	int data;
+	int lchild,rchild;
+}node[maxn]; 
+int n,index=0;
+int orgin[maxn] = {0};
+void inorder(int root){
+	if(root == -1) return;
+	inorder(node[root].lchild);
+	node[root].data = orgin[index++];
+	inorder(node[root].rchild);
+}
+int num = 0;
+void layerOrder(int root){
+	queue<int> q;
+	q.push(root);
+	while(!q.empty()){
+		int front = q.front();
+		if(num!=0) cout <<" ";
+		cout <<  node[front].data;
+		num++;
+		q.pop();
+		if(node[front].lchild!=-1) q.push(node[front].lchild);
+		if(node[front].rchild!=-1) q.push(node[front].rchild);
+	} 
+}
+int main() {
+	cin >>n;
+	int lc,rc;
+	for(int i=0;i<n;i++){
+		cin >> node[i].lchild >> node[i].rchild;
+	}
+	for(int i = 0;i<n;i++){
+		cin >> orgin[i];
+	}
+	sort(orgin,orgin+n);
+	inorder(0);
+	layerOrder(0);
+	return 0;
+}
