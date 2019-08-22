@@ -1,0 +1,69 @@
+#include <iostream>
+#include <map>
+#include <algorithm>
+using namespace std;
+const int maxn = 2005;
+int numId = 1;
+map<string,int> nametoid;
+map<int,string> idtoname;
+map<string,int> gang;
+bool vis[maxn] = {false};
+int G[maxn][maxn]={0},weight[maxn] ={0};
+int n,k;
+int toId(string str){
+	if(nametoid[str] == 0) nametoid[str] = numId++;
+	idtoname[nametoid[str]] = str;
+	return nametoid[str];
+}
+
+void DFS(int v,int &nums,int &head,int &sumWeight){
+	nums++;
+	vis[v] = true;
+	if(weight[v]>weight[head]) head = v;
+	//cout <<v<<"*"<<idtoname[v]<<endl;
+	for(int i = 1;i<numId;i++){
+		if(G[v][i]>0){
+			sumWeight += G[v][i];
+			G[v][i] = G[i][v] = 0; 
+			if(vis[i] == false){
+				DFS(i,nums,head,sumWeight);
+			}
+		}
+	}
+}
+void DFSTrave(){
+	for(int i=1;i<numId;i++){
+		if(vis[i] == false){
+			int nums = 0;
+			int head = i;
+			int sumWeight = 0;
+			DFS(i,nums,head,sumWeight);
+			if(nums>2 && sumWeight > k) {
+				gang[idtoname[head]] = nums;
+			}			
+		}
+	}
+}
+
+int main(){
+	int w;
+	cin >>n>>k;
+	string name1,name2;
+	for(int i=0;i<n;i++){
+		cin >> name1 >> name2 >> w;
+		int id1 = toId(name1);
+		int id2 = toId(name2);
+		//cout << id1 <<" "<<id2<<endl;
+		weight[id1]+=w;
+		weight[id2]+=w;
+		G[id1][id2]+=w;
+		G[id2][id1]+=w;				
+	} 
+	DFSTrave();
+	cout<<gang.size()<<endl;
+	//sort(gang.begin(),gang.end(),cmp);
+	for(auto it = gang.begin();it!=gang.end();it++){
+		cout << it->first <<" "<<it->second<<endl;
+	}
+	return 0;
+}
