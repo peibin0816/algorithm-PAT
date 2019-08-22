@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+const int maxn = 10005;
+int n,k;
+struct people{
+	string name;
+	int height,row;
+};
+bool cmp(people p1,people p2){
+	if(p1.height != p2.height) return p1.height < p2.height ;
+	else return p1.name > p2.name; 
+}
+int main(){
+	cin >> n >> k;
+	int row = k;
+	int col = n/k;
+	vector<people> p(n),rows[row],temp;
+	for(int i=0;i<n;i++){
+		cin >> p[i].name >> p[i].height;
+	}
+	sort(p.begin(),p.end(),cmp);
+	for(int i=0;i<n;i++){
+		if((i+k)>n) rows[row-1].push_back(p[i]);
+		else rows[i/col].push_back(p[i]);
+	}
+	for(int i=row-1;i>=0;i--){
+		int index = rows[i].size()-1;
+		temp.push_back(rows[i][index]);
+		index = index - 1;
+		while(1){
+			if(index < 0) break;
+			temp.insert(temp.begin(),rows[i][index--]);
+			if(index < 0) break;
+			temp.push_back(rows[i][index--]);
+		}
+		for(int j=0;j<temp.size();j++){
+			if(j!=0) cout<<" "; 
+			cout<<temp[j].name;
+		}
+		cout<<endl;
+		while(temp.size()){
+			temp.pop_back();
+		}
+	}/**/
+	return 0;
+}
