@@ -1,0 +1,41 @@
+//插入排序前几个有序，后几个和初始顺序一致
+//堆排序后几个分别是最大的，再去把前面的向下调整，选出最大值，换到末尾即可
+#include <iostream>
+#include <algorithm>
+using namespace std;
+void downAdjust(int b[],int low,int high){
+	int i = low,j=i*2;
+	while(j<=high){ 
+		if(j+1<=high && b[j+1]>b[j]) j=j+1;
+		if(b[j]>b[i]) {
+			swap(b[i],b[j]);
+			i=j;
+			j=i*2;
+		}
+		else break;
+	}
+}
+int main(){
+	int n, a[111],b[111],i,j,p=2;
+	cin >> n;
+	for(i=1;i<=n;i++) cin >> a[i];
+	for(i=1;i<=n;i++) cin >> b[i];
+	for(i=1;i<n && b[i]<=b[i+1];i++);
+	for(j=i+1;j<n+1 && a[j]==b[j];j++);
+	if(j==n+1){
+		printf("Insertion Sort\n");
+		sort(b+1,b+i+2);
+	}
+	else{
+		printf("Heap Sort\n");
+		p=n;
+		while(p>2 && b[p]>=b[1]) p--;
+		swap(b[1],b[p]);
+		downAdjust(b,1,p-1);
+	}
+	for(i=1;i<=n;i++){
+			if(i!=1) cout <<" ";
+			cout << b[i];
+	}
+	return 0;
+}
