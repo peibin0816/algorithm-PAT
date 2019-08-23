@@ -70,5 +70,6 @@ chain
 hierarchy  
 pedigree 
 recursively 
-
-
+indirect 
+guaranteed 
+vitally 
