@@ -73,3 +73,4 @@ recursively
 indirect 
 guaranteed 
 vitally 
+acyclic 
