@@ -1,0 +1,45 @@
+#include <iostream>
+using namespace std;
+const int maxn = 1111;
+int G[maxn][maxn]= {0};
+bool inq[maxn] = {false};
+int n,m,k,sum = 0;
+void DFS(int v,int lost) {
+	if(v == lost) return;
+	inq[v] = true;
+	//cout<<"jiedian"<<v<<endl;
+	for(int i=1; i<=n; i++) {
+		if(inq[i] == false && G[v][i] == 1) {
+			DFS(i,lost);
+		}
+	}
+}
+void DFSTrave(int &lost) {
+	sum = 0;
+	for(int i=1; i<=n; i++) {
+		if(i==lost) continue;
+		if(inq[i] == false) {
+			sum++;
+			//cout<<"联通"<<sum<<endl;
+			DFS(i,lost);			 
+		}
+	}
+}
+int main() {
+	int r1,r2,lost;
+	cin >>n>>m>>k;
+	for(int i=0; i<m; i++) {
+		cin >> r1 >> r2;
+		G[r1][r2] = 1;
+		G[r2][r1] = 1;
+	}
+	while(k--) {
+		cin>>lost;
+		for(int i=1; i<=n; i++) {
+			inq[i]=false;
+		}
+		DFSTrave(lost);
+		cout<<sum-1<<endl;
+	}
+	return 0;
+}
