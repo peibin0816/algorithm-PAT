@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <set>
+using namespace std;
+const int maxn = 10005;
+vector<int> adj[maxn];
+bool inq[maxn] = {false};
+set<int> root;
+int n,sum=0;
+bool isg = false;
+void DFS(int v,int deep,int &max) {
+	if(inq[v] != false) isg = true;
+	if(deep > max) max = deep;
+	inq[v] = true;
+	for(int i=0; i<adj[v].size(); i++) {
+		if(inq[adj[v][i]] == false) {
+			DFS(adj[v][i],deep+1,max);
+		}
+	}
+}
+void DFSTrave(){
+	for(int i=1; i<=n; i++) {
+		if(inq[i] == false) {
+			sum++;
+			int max = 0;
+			DFS(i,1,max);		 
+		}
+	}
+}
+int main() {
+	int v1,v2;
+	cin >> n;
+	for(int i=0;i<n-1;i++){
+		cin >> v1 >> v2;
+		adj[v1].push_back(v2);
+		adj[v2].push_back(v1);
+	}
+	DFSTrave();
+	if(isg || sum>1) cout<<"Error: "<<sum<<" components"<<endl;
+	else{
+		int maxdeep = 0;
+		for(int i=1; i<=n; i++){
+			for(int i=1; i<=n; i++) inq[i] = false;
+			int height = 0;
+			DFS(i,1,height);
+			//cout << height <<endl;
+			/**/
+			if(height > maxdeep){
+				maxdeep = height;
+				root.erase(root.begin(),root.end());
+				root.insert(i);
+			}else if(height == maxdeep){
+				root.insert(i);
+			}/**/
+		}
+		/**/
+		for(set<int>::iterator it=root.begin(); it!=root.end();it++){
+			cout << *it <<endl;
+		}/**/
+	}
+	return 0;
+}
