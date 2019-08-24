@@ -1,0 +1,81 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+const int maxn = 505;
+const int INF = 100000;
+//主函数定义 
+int n,m,st,de;
+int G[maxn][maxn];
+int cost[maxn][maxn];
+//djistra算法定义 
+int d[maxn]; 
+bool vis[maxn] = {false};
+vector<int> pre[maxn];
+//第二标尺定义 
+int optvalue=INF;
+vector<int> path,tempPath; 
+void Djistra(int st){
+	fill(d,d+maxn,INF);
+	d[st]=0;
+	for(int i=0;i<n;i++){
+		int u=-1,MIN = INF;
+		for(int j=0;j<n;j++){
+			if(vis[j] == false && d[j] < MIN){
+				u = j;
+				MIN = d[j]; 
+			}
+		}
+		if(u==-1) return;
+		vis[u] = true;
+		for(int v=0;v<n;v++){
+			if(vis[v] == false && G[u][v] !=INF){ 
+				if(d[v]>d[u]+G[u][v]){
+					d[v] = d[u] +G[u][v];
+					pre[v].clear();
+					pre[v].push_back(u);
+				}else if(d[v] == d[u]+G[u][v]){
+					pre[v].push_back(u);
+				}
+			} 			 
+		} 
+	}	
+}
+void DFS(int v){
+	if(v == st){
+		tempPath.push_back(v);
+		int value = 0;
+		for(int i = tempPath.size()-1;i>0;i--){
+			int id = tempPath[i],idNext = tempPath[i-1];
+			value += cost[id][idNext];
+		}
+		if(value < optvalue){
+			optvalue = value;
+			path = tempPath;
+		}
+		tempPath.pop_back();
+		return;
+	}
+	tempPath.push_back(v);
+	for(int i=0;i<pre[v].size();i++){
+		DFS(pre[v][i]);
+	}
+	tempPath.pop_back();
+}
+int main() {
+	fill(G[0],G[0]+maxn*maxn,INF);
+	fill(cost[0],cost[0]+maxn*maxn,INF);
+	cin >>n>>m>>st>>de;
+	int c1,c2,dis,cst;
+	for(int i=0;i<m;i++){
+		cin >>c1>>c2>>dis>>cst;
+		G[c1][c2] = G[c2][c1] = dis;
+		cost[c1][c2] = cost[c2][c1] = cst;
+	}
+	Djistra(st);
+	DFS(de);
+	for(int i=path.size()-1;i>=0;i--){
+		cout << path[i] <<" ";
+	}
+	cout << d[de] <<" "<< optvalue;
+	return 0;
+}
