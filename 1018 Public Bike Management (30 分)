@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+const int maxn = 505;
+const int INF = 10000000;
+int cmax,n,sp,m;
+int cap[maxn] = {0};
+int G[maxn][maxn];
+//Dijkstra定义
+int d[maxn]; 
+bool vis[maxn] ={false};
+vector<int> pre[maxn];
+void Dijkstra(int st){
+	fill(d,d+maxn,INF);
+	d[st] = 0; 
+	for(int i=0;i<=n;i++){
+		int u=-1,MIN = INF;
+		for(int j=0;j<=n;j++){
+			if(vis[j] == false && d[j] < MIN){
+				u = j;
+				MIN = d[j];
+			}
+		}
+		if(u == -1) return;
+		vis[u] = true;
+		for(int v=0;v<=n;v++){
+			if(vis[v] ==false && G[u][v]!=INF){
+				if(d[v] > d[u]+G[u][v]){
+					d[v] = d[u]+G[u][v];
+					pre[v].clear();
+					pre[v].push_back(u);
+				}
+				else if (d[v] == d[u]+G[u][v]){
+					pre[v].push_back(u);
+				}
+			}
+		}
+	}
+}
+vector<int> path,tempPath;
+int minNeed=INF,minBack=INF;
+void DFS(int v){
+	if(v == 0){
+		int need=0,back=0;
+		tempPath.push_back(0);
+		for(int i = tempPath.size()-1;i>=0;i--){
+			int id = tempPath[i];
+			if(cap[id] > 0 ){
+				back += cap[id];
+			}else{
+				if(back > abs(cap[id])){
+					back -=abs(cap[id]);
+				}
+				else{
+					need += abs(cap[id]) - back;
+					back = 0;
+				}
+			}
+		}
+		if(need<minNeed) {
+			minNeed = need;
+			minBack = back;
+			path = tempPath;
+		}else if(need == minNeed && back < minBack) {
+			minBack = back;
+			path = tempPath;
+		}
+		tempPath.pop_back();
+		return;
+	}
+	tempPath.push_back(v);
+	for(int i=0;i<pre[v].size();i++){
+		DFS(pre[v][i]);
+	}
+	tempPath.pop_back();
+	
+}
+int main() {
+	fill(G[0],G[0]+maxn*maxn,INF);
+	cap[0] = 0;
+	cin >> cmax >> n >> sp >> m;
+	for(int i=1;i<=n;i++){
+		cin >> cap[i];
+		cap[i] -= cmax/2;
+	}
+	int s1,s2,t;
+	for(int i = 0;i<m;i++){
+		cin >> s1 >> s2 >> t;
+		G[s1][s2] = G[s2][s1] = t;
+	}
+	Dijkstra(0);
+	//cout << d[sp] << endl;
+	DFS(sp);
+	cout << minNeed << " ";
+	for(int i=path.size()-1;i>=0;i--){
+		cout<< path[i];
+		if(i!=0) cout<<"->"; 
+	}
+	cout << " "<<minBack;
+	return 0;
+}
