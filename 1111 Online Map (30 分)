@@ -1,0 +1,150 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+const int maxn = 555;
+const int INF = 10000000;
+int n,m,st,en;
+int G[maxn][maxn],T[maxn][maxn];
+//D
+int d[maxn];
+int vis[maxn] = {false};
+vector<int> preG[maxn];
+void DijkstraG(int st){
+	fill(d,d+maxn,INF);
+	d[st] = 0;
+	for(int i=0;i<n;i++){
+		int u=-1,MIN=INF;
+		for(int j=0;j<n;j++){
+			if(vis[j]==false && d[j]<MIN){
+				u = j;
+				MIN = d[j];
+			}
+		}
+		if(u==-1) return;
+		vis[u] = true;
+		for(int v= 0;v<n;v++){
+			if(vis[v]==false && G[u][v] != INF){
+				if(d[v]>d[u]+G[u][v]){
+					d[v]=d[u]+G[u][v];
+					preG[v].clear();
+					preG[v].push_back(u); 
+				}else if(d[v] == d[u]+G[u][v] ){
+					preG[v].push_back(u);
+				}
+			}
+		}
+	} 
+}
+vector<int> tempPath,pathG; 
+int MINTime = INF;
+void DFSG(int v){
+	if(v == st){
+		tempPath.push_back(v);
+		int sumTime = 0;
+		for(int i=tempPath.size()-1;i>0;i--){
+			sumTime += T[tempPath[i]][tempPath[i-1]];
+		}
+		if(sumTime < MINTime) {
+			MINTime = sumTime;
+			pathG = tempPath;
+		}
+		tempPath.pop_back();
+	}
+	tempPath.push_back(v);
+	for(int i=0;i<preG[v].size();i++){
+		DFSG(preG[v][i]);
+	}
+	tempPath.pop_back();
+}
+
+int t[maxn];
+vector<int> preT[maxn];
+void DijkstraT(int st){
+	fill(t,t+maxn,INF);
+	fill(vis,vis+maxn,false);
+	t[st] = 0;
+	for(int i=0;i<n;i++){
+		int u=-1,MIN=INF;
+		for(int j=0;j<n;j++){
+			if(vis[j]==false && t[j]<MIN){
+				u = j;
+				MIN = t[j];
+			}
+		}
+		if(u==-1) return;
+		vis[u] = true;
+		for(int v= 0;v<n;v++){
+			if(vis[v]==false && T[u][v] != INF){
+				if(t[v] > t[u]+T[u][v]){
+					t[v] = t[u]+T[u][v];
+					preT[v].clear();
+					preT[v].push_back(u);
+				}else if(t[v] == t[u]+T[u][v] ){
+					preT[v].push_back(u);
+				}
+			}
+		}
+	} 
+}
+vector<int> pathT; 
+int MINIns = INF;
+void DFST(int v){
+	if(v == st){
+		tempPath.push_back(v);
+		int sumIns = tempPath.size();
+		if(sumIns < MINIns) {
+			MINIns = sumIns;
+			pathT = tempPath;
+		}
+		tempPath.pop_back();
+	}
+	tempPath.push_back(v);
+	for(int i=0;i<preT[v].size();i++){
+		DFST(preT[v][i]);
+	}
+	tempPath.pop_back();
+}
+int main() {
+	cin>>n>>m;
+	int v1,v2,oneway,l,time;
+	fill(G[0],G[0]+maxn*maxn,INF) ;
+	fill(T[0],T[0]+maxn*maxn,INF) ;
+	for(int i=0;i<m;i++){
+		cin>>v1>>v2>>oneway>>l>>time;
+		if(oneway == 1){
+			G[v1][v2] = l;
+			T[v1][v2] = time;
+		}else{
+			G[v1][v2] = G[v2][v1] = l;
+			T[v1][v2] = T[v2][v1] = time;
+		}
+	}
+	cin >> st >> en;
+	DijkstraG(st);
+	DFSG(en);
+	DijkstraT(st);
+	tempPath.clear();
+	DFST(en);
+	if(pathG == pathT) {
+		cout <<"Distance = "<< d[en] << "; Time = "<<t[en]<<": ";
+		for(int i = pathG.size()-1;i>=0;i--){
+			cout<< pathG[i];
+			if(i!=0) cout<<" -> ";
+		}
+	}else{
+		cout <<"Distance = "<<d[en]<<": " ;
+		for(int i = pathG.size()-1;i>=0;i--){
+			cout<< pathG[i];
+			if(i!=0) cout<<" -> ";
+		}
+		cout<<endl;
+		cout <<"Time = "<<t[en]<<": ";
+		for(int i = pathT.size()-1;i>=0;i--){
+			cout<< pathT[i];
+			if(i!=0) cout<<" -> ";
+		}
+	}/**/
+	
+	return 0;
+}
