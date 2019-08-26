@@ -1,0 +1,87 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+using namespace std;
+const int maxn = 1111;
+const int INF = 100000000;
+int n,m,k,ds;
+int G[maxn][maxn];
+int d[maxn]; 
+bool vis[maxn] ={false};
+double avgM[maxn] = {0.0};
+void Dijkstra(int st){
+	fill(d,d+maxn,INF);
+	fill(vis,vis+maxn,false);
+	d[st] = 0; 
+	for(int i=1;i<=m+n;i++){
+		int u=-1,MIN = INF;
+		for(int j=1;j<=m+n;j++){
+			if(vis[j] == false && d[j] < MIN){
+				u = j;
+				MIN = d[j];
+			}
+		}
+		if(u == -1) return;
+		vis[u] = true;
+		for(int v=1;v<=m+n;v++){
+			if(vis[v] ==false && G[u][v]!=INF){
+				if(d[v] > d[u]+G[u][v]){
+					d[v] = d[u]+G[u][v];
+				}
+			}
+		}
+	}
+}
+int main() {
+	fill(G[0],G[0]+maxn*maxn,INF);
+	cin >>n>>m>>k>>ds;
+	string str1,str2;
+	int c1,c2,dis;
+	for(int i=0;i<k;i++){
+		cin>>str1>>str2>>dis;
+		if(str1[0] == 'G'){
+			str1 = str1.substr(1);
+			c1 = stoi(str1)+n;
+		}else c1 = stoi(str1);
+		if(str2[0] == 'G'){
+			str2 = str2.substr(1);
+			c2 = stoi(str2)+n;
+		}else c2 = stoi(str2);
+		G[c1][c2] =G[c2][c1] =  dis;		
+	}
+	int mindis = -1,index = -1;
+	double minavg = INF;
+	for(int i=1;i<=m;i++){
+		Dijkstra(i+n);
+		int sum = 0,minD = INF,maxD = 0;
+		for(int j=1;j<=n;j++){
+			//cout << d[i] <<"*"; 
+			if(d[j] < minD) minD = d[j];
+			if(d[j] > maxD) maxD = d[j];
+			sum += d[j];
+		}
+		double avg = (double)sum/n;
+		avgM[i] = avg;
+		//cout<<avg<<" "<<maxD<<" "<<minD<<endl;
+		if(maxD <= ds){
+			if(minD > mindis){
+				mindis = minD;
+				index = i;
+				minavg = avg;
+			}
+			if(minD == mindis && avg < minavg){
+				minavg = avg;
+				index = i;
+			}
+		}
+		//cout <<index<<" "<<mindis<<" "<<minavg<<endl;
+	}
+	if(index==-1) cout <<"No Solution"<<endl;
+	else{
+		cout<<"G"<<index<<endl;
+		double a = (int)((avgM[index] * 10) + 0.5) / 10.0;
+		printf("%.1f %.1f",(double)mindis,a);
+	}	
+	return 0;
+}
