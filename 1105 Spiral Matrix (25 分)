@@ -1,0 +1,53 @@
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+const int maxn = 10005;
+int N,a[maxn];
+int matrix[maxn][maxn];
+bool cmp(int a,int b){
+	return a>b;
+}
+int main() {
+	cin >> N;
+	for(int i=0;i<N;i++){
+		scanf("%d",&a[i]);
+	}
+	if(N == 1) {
+		cout<<a[0];
+		return 0; 
+	}
+	sort(a,a+N,cmp);
+	int m = (int)ceil(sqrt(1.0*N)),n;
+	while(N%m !=0) m++;
+	n = N/m;
+	int i = 1,j=1,now = 0;
+	int U = 1,D=m,L=1,R=n;
+	while(now<N){
+		while(now<N && j < R){
+			matrix[i][j++] = a[now++];
+		}
+		while(now<N && i<D){
+			matrix[i++][j] = a[now++];
+		}
+		while(now<N && j>L){
+			matrix[i][j--]= a[now++];
+		}
+		while(now<N && i>U){
+			matrix[i--][j]= a[now++];
+		}
+		U++,D--,L++,R--;
+		i++,j++;
+		if(now == N-1){
+			matrix[i][j] = a[now++];
+		}
+	}
+	for(int i = 1;i<=m;i++){
+		for(int j=1;j<=n;j++){
+			if(j!=1) cout<<" ";
+			cout << matrix[i][j];
+		}
+		cout<<endl;
+	} 
+	return 0;
+}
