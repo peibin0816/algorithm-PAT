@@ -1,0 +1,108 @@
+#include <iostream>
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <string>
+using namespace std;
+const int maxn = 1111;
+const int INF = 100000000;
+int n,k,st;
+int G[maxn][maxn];
+int d[maxn]; 
+bool vis[maxn] ={false};
+int haps[maxn] = {0};
+vector<int> pre[maxn];
+void Dijkstra(int st){
+	fill(d,d+maxn,INF);
+	fill(vis,vis+maxn,false);
+	d[st] = 0; 
+	for(int i=0;i<n;i++){
+		int u=-1,MIN = INF;
+		for(int j=0;j<n;j++){
+			if(vis[j] == false && d[j] < MIN){
+				u = j;
+				MIN = d[j];
+			}
+		}
+		if(u == -1) return;
+		vis[u] = true;
+		for(int v=0;v<n;v++){
+			if(vis[v] == false && G[u][v]!=INF){
+				if(d[v] > d[u]+G[u][v]){
+					d[v] = d[u]+G[u][v];
+					pre[v].clear();
+					pre[v].push_back(u);
+				}else if(d[v] == d[u]+G[u][v]) {
+					pre[v].push_back(u);
+				}
+			}
+		}
+	}
+}
+vector<int> path,tempPath;
+int maxHap = -1,countR = 0;
+double maxavghap = 0.0;
+void DFS(int v){
+	int sumHap = 0;
+	double avgHap=0.0;
+	if(v == st){
+		tempPath.push_back(v);
+		countR++;
+		for(int i=tempPath.size()-1;i>=0;i--){
+			sumHap += haps[tempPath[i]];
+		}
+		avgHap = (double)sumHap/(tempPath.size()-1); 
+		if(sumHap > maxHap){
+			maxHap = sumHap;
+			path = tempPath;
+			maxavghap = avgHap;
+		}
+		else if(sumHap == maxHap && avgHap > maxavghap){
+			maxavghap =  avgHap;
+			path = tempPath;
+		}
+		tempPath.pop_back();
+	}
+	tempPath.push_back(v);
+	for(int i=0;i<pre[v].size();i++){
+		DFS(pre[v][i]);
+	}
+	tempPath.pop_back();
+}
+
+map<string,int> sToId;
+map<int,string> IdTos;
+int num=0;
+int toId(string str){
+	if(sToId.find(str) != sToId.end()) 
+		return sToId[str];
+	else{
+		sToId[str] = num++;
+		IdTos[sToId[str]] = str;
+		return sToId[str];
+	}	
+}
+int main() {
+	fill(G[0],G[0]+maxn*maxn,INF);
+	string start,c1,c2;
+	int hap,cost;
+	cin >>n>>k>>start;
+	st = toId(start);
+	haps[st] = 0;
+	for(int i=0;i<n-1;i++){
+		cin>>c1>>hap;
+		haps[toId(c1)] = hap;	
+	}
+	for(int i=0;i<k;i++){
+		cin>>c1>>c2>>cost;
+		G[toId(c1)][toId(c2)] = G[toId(c2)][toId(c1)] = cost;		
+	}
+	Dijkstra(toId(start));
+	DFS(toId("ROM"));
+	cout << countR <<" "<< d[toId("ROM")]<<" "<< maxHap <<" "<<(int)maxavghap <<endl;
+	for(int i=path.size()-1;i>=0;i--){
+		cout << IdTos[path[i]];
+		if(i!=0) cout <<"->";
+	}
+	return 0;
+}
