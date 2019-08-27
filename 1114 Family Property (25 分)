@@ -1,0 +1,105 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <queue>
+using namespace std;
+const int maxn = 10005;
+struct person{
+	int id,M;
+	vector<int> family;
+	int area;	
+}p[maxn];
+struct ans{
+	int total,smallID;
+	double avgset,avgarea;
+	ans(int _total,int _smallID,double _avgset,double _avgarea){
+		total = _total;
+		smallID = _smallID;
+		avgset = _avgset;
+		avgarea = _avgarea;
+	}
+};
+vector<ans> mem; 
+map<int,int> idToNum;
+map<int,int> numToid;
+bool inq[maxn] = {false};
+int n,num = 0;
+int toNum(int id){
+	if(id==-1) return -1;
+	if(idToNum.find(id)!=idToNum.end()) return idToNum[id];
+	else{
+		idToNum[id] = num++;
+		numToid[idToNum[id]] = id;
+		return idToNum[id];
+	}	
+}
+void BFS(int i,int &total,int &smallID,double &sumset,double &sumarea){
+	queue<int> q;
+	q.push(i);
+	inq[i] = true;
+	while(!q.empty()){
+		int front = q.front();
+	//	cout << numToid[front] <<endl;
+		if(smallID > numToid[front]){
+			smallID = numToid[front];
+		}
+		sumset += p[front].M;
+		sumarea += p[front].area;
+		q.pop();
+		total ++;
+		for(int i=0;i<p[front].family.size();i++){
+			if(inq[p[front].family[i]] == false){
+				q.push(p[front].family[i]);
+				inq[p[front].family[i]] = true;
+			}
+		}
+	}
+}
+bool cmp(ans a1,ans a2){
+	if(a1.avgarea!=a2.avgarea) return a1.avgarea>a2.avgarea;
+	else return a1.smallID <a2.smallID;
+}
+int main() {
+	cin >> n;
+	int id,father,mother,k,child,m,area;
+	for(int i=0;i<n;i++){
+		cin >> id >>father >>mother >>k;
+		id = toNum(id);
+		if(father != -1){
+			p[id].family.push_back(toNum(father));
+			p[toNum(father)].family.push_back(id);
+		}
+		if(mother != -1){
+			p[id].family.push_back(toNum(mother));
+			p[toNum(mother)].family.push_back(id);
+		}
+		for(int j=0;j<k;j++){
+			cin >> child;
+			p[id].family.push_back(toNum(child));
+			p[toNum(child)].family.push_back(id);
+		}
+		cin>>m>>area;
+		p[id].M = m;
+		p[id].area = area;
+	}
+	int count = 0;
+	for(int i=0;i<num;i++){
+		if(inq[i]==false){
+			count++;
+			int total = 0,smallID = maxn;
+			double sumset = 0.0,sumarea = 0.0;
+			BFS(i,total,smallID,sumset,sumarea);
+			//cout << total<<"*"<<smallID<< endl;
+			double avgset = sumset/total;
+			double avgarea = sumarea/total;
+			mem.push_back(ans(total,smallID,avgset,avgarea));	
+		}
+	}
+	cout << count<<endl;
+	sort(mem.begin(),mem.end(),cmp);
+	for(int i=0;i<mem.size();i++){
+		ans temp = mem[i];
+		printf("%04d %d %.3f %.3f\n",temp.smallID,temp.total,temp.avgset,temp.avgarea);
+	}
+	return 0;
+}
