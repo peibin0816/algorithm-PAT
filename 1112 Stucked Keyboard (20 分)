@@ -1,0 +1,47 @@
+#include <iostream>
+#include <map>
+using namespace std;
+int inq[225] = {false};
+map<char,int> Bkey;
+int main() {
+	int k,index = 0;
+	string str;
+	cin >> k >> str;
+	for(int i=0;i<k;i++) str += 'A';
+	int len = str.length();
+	while(index<len-k){
+		char c = str[index];
+		bool flag = false;
+		for(int j=index+1;j<index+k;j++){
+			if(str[j] != c) {
+				flag = true;
+				Bkey[c] = -1;
+				index = j;
+				break;
+			}
+		}
+		if(!flag) {
+			if(Bkey[c] != -1){
+				Bkey[c] ++;
+			}			
+			index += k;
+		}
+	}
+	index = 0;
+	while(index<len-k){
+		if(!inq[str[index]] && Bkey[str[index]] > 0){
+			cout<<str[index];
+			inq[str[index]] = true;
+			index+=k;
+		}else index++;
+	}
+	cout<<endl;
+	index = 0;
+	while(index<len-k){
+		cout<<str[index];
+		if(Bkey[str[index]] > 0){
+			index+=k;
+		}else index++;
+	}
+	return 0;
+}
