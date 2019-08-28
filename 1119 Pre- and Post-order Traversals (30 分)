@@ -1,0 +1,52 @@
+#include <iostream>
+using namespace std;
+const int maxn = 55;
+struct node{
+	int v;
+	node *lchild,*rchild;
+};
+int index = 0,n;
+bool flag = true;
+int preorder[maxn],postorder[maxn];
+node* creat(int preL,int preR,int postL,int postR){
+	if(preL > preR) return NULL;
+	node* root = new node;
+	root->v = preorder[preL];
+	int k;
+	for(k=preL+1;k<=preR;k++){
+		if(preorder[k] == postorder[postR-1]){
+			break;
+		}
+	}
+	int numleft = k-preL-1; 
+	if(numleft == 0 && preR-preL !=0) flag = false;
+	root->lchild = creat(preL+1,preL+numleft,postL,postL+numleft-1);
+	root->rchild = creat(preL+numleft+1,preR,postL+numleft,postR-1);
+	return root;
+}
+void inorder(node* root){
+	if(root == NULL){
+		return; 
+	}
+	inorder(root->lchild);
+	index++;
+	cout<< root->v;
+	if(index != n) cout<<" ";
+	inorder(root->rchild);
+}
+int main() {
+	cin >> n;
+	for(int i=1;i<=n;i++){
+		cin >> preorder[i];
+	}
+	for(int i=1;i<=n;i++){
+		cin >> postorder[i];
+	}
+	int preL = 1,preR=n,postL=1,postR=n;
+	node* root = creat(preL,preR,postL,postR);
+	if(flag) cout << "Yes" <<endl;
+	else cout << "No" << endl;
+	inorder(root);
+	cout<<endl;
+	return 0;
+}
