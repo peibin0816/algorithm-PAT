@@ -1,0 +1,106 @@
+#include <iostream>
+#include <algorithm>
+#include <queue>
+using namespace std;
+int n,num=0;
+struct node{
+	int v,height;
+	node *lchild,*rchild;
+};
+node* newnode(int v){
+	node* Node = new node;
+	Node->v = v;
+	Node->lchild = Node->rchild=NULL;
+	Node->height = 1;
+	return Node; 
+} 
+int getHeight(node* root){
+	if(root==NULL) return 0;
+	else return root->height;
+}
+int getFactor(node* root){
+	return getHeight(root->lchild)-getHeight(root->rchild);
+}
+void updataHeight(node* root){
+	root->height = max(getHeight(root->lchild),getHeight(root->rchild)) +1;
+}
+void L(node* &root){
+	node* temp = root->rchild;
+	root->rchild = temp->lchild;
+	temp->lchild = root;
+	updataHeight(root);
+	updataHeight(temp);
+	root = temp;	
+}
+void R(node* &root){
+	node* temp = root->lchild;
+	root->lchild = temp->rchild;
+	temp->rchild = root;
+	updataHeight(root);
+	updataHeight(temp);
+	root = temp;	
+}
+void insert(node* &root,int v){
+	if(root == NULL) {
+		root = newnode(v);
+		return;
+	}
+	if(v < root->v) {
+		insert(root->lchild,v);
+		updataHeight(root);
+		if(getFactor(root) == 2){
+			if(getFactor(root->lchild) == 1){
+				R(root);
+			}else if(getFactor(root->lchild) == -1){
+				L(root->lchild);
+				R(root);
+			}
+		}
+	}
+	else{
+		insert(root->rchild,v);
+		updataHeight(root);
+		if(getFactor(root) == -2){
+			if(getFactor(root->rchild) == -1){
+				L(root);
+			}else if(getFactor(root->rchild) == 1){
+				R(root->rchild);
+				L(root);
+			}
+		}
+	}
+}
+bool flag = true;
+void levelOrder(node* root){
+	queue<node*> q;
+	q.push(root);
+	while(num < n){
+		node* front = q.front();
+		q.pop();
+		if(front == NULL){
+			flag = false;
+			
+			continue;
+		}else{
+			cout << front->v;
+			num++;
+			if(num!=n) cout <<" ";
+		}
+		q.push(front->lchild);
+		q.push(front->rchild);
+	}
+}
+int main() {
+	cin>>n;
+	int data;
+	node* root = NULL;
+	for(int i=0;i<n;i++){
+		cin >> data;
+		insert(root,data);
+	}
+	levelOrder(root);
+	cout<<endl;
+	if(flag) cout <<"YES"<<endl;
+	else cout<<"NO"<<endl;
+	return 0;
+}
