@@ -1,0 +1,28 @@
+#include <iostream>
+#include <map>
+#include <vector>
+using namespace std;
+int m,n,s;
+map<string,int> istrue;
+int main() {
+	cin >> m >> n >>s;
+	string str;
+	int index;
+	index = s;
+	for(int i=1;i<=m;i++){
+		cin >> str;
+		if(i == index){
+			if(istrue.find(str) != istrue.end()) {
+				index++;
+				continue;
+			}
+			else{
+				istrue[str] = 1;
+				cout << str <<endl;
+				index+=n;
+			}
+		}
+	}
+	if(istrue.size() == 0) cout<<"Keep going..."<<endl;
+	return 0;
+}
