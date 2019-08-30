@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <vector>
+using namespace std;
+const int maxn = 555;
+int n,m;
+int G[maxn][maxn] = {0};
+bool inq[maxn] ={false};
+int num = 0;
+void DFS(int v) {
+	inq[v] = true;
+	num++;
+	for(int i=1; i<=n; i++) {
+		if(inq[i] == false && G[v][i] != 0) {
+			DFS(i);
+		}
+	}
+}
+vector<int> even;
+vector<int> odd;
+int main() {
+	cin >>n>>m;
+	int v1,v2;
+	for(int i=0; i<m; i++) {
+		cin >> v1 >> v2;
+		G[v1][v2] = G[v2][v1] = 1;
+	}
+	for(int i=1; i<=n; i++) {
+		int deg = 0;
+		if(i!=1) cout<<" ";
+		for(int j=1; j<=n; j++) {
+			if(G[i][j] != 0) {
+				deg++;
+			}
+		}
+		if(deg%2 == 0) even.push_back(i);
+		else odd.push_back(i);
+		cout<<deg;
+	}
+	cout<<endl;
+	DFS(1);
+	if(num==n && odd.size()==0) {
+		cout<<"Eulerian"<<endl;
+	} else if(num==n && odd.size()==2) {
+		cout<<"Semi-Eulerian"<<endl;
+	} else cout<<"Non-Eulerian"<<endl;
+
+	return 0;
+}
