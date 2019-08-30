@@ -1,0 +1,66 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+const int maxn = 50;
+struct node{
+	int v,layer;
+	node *lchild,*rchild;
+};
+int n,in[maxn] = {0},post[maxn] = {0},height = -1;
+vector<int> ans[maxn];
+node* creat(int inL,int inR,int postL,int postR){
+	if(postL > postR) return NULL;
+	node* root = new node;
+	root->v = post[postR];
+	int k = 1;
+	while(in[k] != post[postR]) k++;
+	int numleft = k-inL; 
+	root->lchild = creat(inL,inL+numleft-1,postL,postL+numleft-1);
+	root->rchild = creat(inL+numleft+1,inR,postL+numleft,postR-1);
+	return root;
+}
+void level(node* root){
+	queue<node*> q;
+	q.push(root);
+	root->layer=0;
+	while(!q.empty()){
+		node* front = q.front();
+		q.pop();
+		if(height < front->layer) {
+			height = front->layer;
+		}
+		if(front->layer % 2 ==0 ){
+			ans[front->layer].insert(ans[front->layer].begin(),front->v);
+		}
+		else{
+			ans[front->layer].push_back(front->v);
+		}
+		if(front->lchild !=NULL) {
+			q.push(front->lchild);
+			front->lchild->layer = front->layer+1;
+		}
+		if(front->rchild !=NULL) {
+			q.push(front->rchild);
+			front->rchild->layer = front->layer+1;
+		}	
+	}
+}
+int main() {
+	cin>>n;
+	for(int i=1;i<=n;i++) cin>>in[i];
+	for(int i=1;i<=n;i++) cin>>post[i];
+	int inL=1,inR=n,postL=1,postR=n;
+	node* root = NULL;
+	root = creat(inL,inR,postL,postR);
+	level(root);
+	int count=0;
+	for(int i=0;i<=height;i++){
+		for(int j=0;j<ans[i].size();j++){
+			cout<<ans[i][j];
+			count++;
+			if(count!=n) cout<<" ";
+		}
+	}
+	return 0;
+}
