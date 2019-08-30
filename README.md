@@ -81,3 +81,4 @@ stucked  	stucked
 rope 	绳
 chain  	链
 halved  	减半
+loops 环
