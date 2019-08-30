@@ -1,6 +1,6 @@
-# pat  pat刷题笔记
+# pat  pat刷题笔记	#pat pat刷题笔记
 	
-#Unfamiliar word
+#Unfamiliar word	＃不熟悉的单词
 	
 partition  	划分
 pivot   	枢
