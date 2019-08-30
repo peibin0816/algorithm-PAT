@@ -1,0 +1,33 @@
+#include <iostream>
+#include <set>
+using namespace std;
+const int maxn = 50005;
+struct node{
+	int v,count;
+	bool operator < (const node &a) const {
+		return (count != a.count) ? count > a.count : v < a.v;
+ 	}
+};
+int cnt[maxn];
+int main() {
+	int n,k,temp;
+	scanf("%d%d",&n,&k);
+	set<node> ans;
+	for(int i=0;i<n;i++){
+		scanf("%d",&temp);
+		if(i!=0){
+			printf("%d:",temp);
+			int index=0;
+			for(auto it = ans.begin(); it != ans.end() && index<k; it++){
+				printf(" %d",it->v);
+				index++;
+			}
+			cout<<endl;	
+		}
+		auto it = ans.find(node{temp,cnt[temp]});
+		if(it!=ans.end()) ans.erase(it);
+		cnt[temp]++;
+		ans.insert(node{temp,cnt[temp]});
+	}
+	return 0;
+}
