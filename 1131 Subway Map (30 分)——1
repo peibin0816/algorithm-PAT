@@ -1,0 +1,121 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+const int maxn = 111;
+const int INF = 10000000;
+int G[maxn][maxn];
+int line[maxn][maxn];
+int n,k,m,sta,endsta;
+unordered_map<string,int> idTonum;
+unordered_map<int,string> numToId;
+int idnum = 1;
+int toNum(string id) {
+	if(id == "") return -1;
+	if(idTonum.find(id) != idTonum.end()) {
+		return idTonum[id];
+	} else {
+		idTonum[id] = idnum++;
+		numToId[idTonum[id]] = id;
+		return idTonum[id];
+	}
+}
+//Dijkstra
+bool inq[maxn];
+int d[maxn];
+vector<int> pre[maxn];
+void Dijkstra(int sta) {
+	fill(d,d+maxn,INF);
+	fill(inq,inq+maxn,false);
+	d[sta]=0;
+	for(int i=0; i<idnum; i++) {
+		int u=-1,MIN=INF;
+		for(int j=0; j<idnum; j++) {
+			if(inq[j] ==false && d[j]<MIN) {
+				u = j;
+				MIN = d[j];
+			}
+		}
+		if(u==-1) return;
+		inq[u] = true;
+		for(int v=0; v<idnum; v++) {
+			if(inq[v] == false && G[u][v] != INF) {
+				if(d[v] > d[u]+G[u][v]) {
+					d[v] = d[u]+G[u][v];
+					pre[v].clear();
+					pre[v].push_back(u);
+				} else if(d[v]==d[u]+G[u][v]) {
+					pre[v].push_back(u);
+				}
+			}
+		}
+	}
+}
+vector<int> path,tempPath;
+int MINTransfers = INF;
+void DFS(int v) {
+	if(v == sta) {
+		tempPath.push_back(v);
+		int transfers = 0;
+		for(int i = tempPath.size()-1; i>1; i--) {
+			if(line[tempPath[i]][tempPath[i-1]] != line[tempPath[i-1]][tempPath[i-2]]) transfers++;
+		}
+		if(MINTransfers > transfers) {
+			path = tempPath;
+			MINTransfers = transfers;
+		}
+		tempPath.pop_back();
+	}
+	tempPath.push_back(v);
+	for(int i=0; i<pre[v].size(); i++) {
+		DFS(pre[v][i]);
+	}
+	tempPath.pop_back();
+}
+int main() {
+	cin>>n;
+	fill(G[0],G[0]+maxn*maxn,INF);
+    fill(line[0],line[0]+maxn*maxn,0);
+	string frontStr,nextStr;
+	int frontS,nextS;
+	for(int i=1; i<=n; i++) {
+		cin>>m>>frontStr;
+		frontS = toNum(frontStr);
+		for(int j=1; j<m; j++) {
+			cin >> nextStr;
+			nextS = toNum(nextStr);
+			line[frontS][nextS] = line[nextS][frontS] = i;
+			G[frontS][nextS] = G[nextS][frontS] = 1;
+			frontS = nextS;
+		}
+	}
+	cin>>k;
+	for(int i=0; i<k; i++) {
+		cin >> frontStr >> nextStr;
+		sta = toNum(frontStr);
+		endsta = toNum(nextStr);
+		path.clear();
+		for(int j=0;j<maxn;j++){
+			pre[j].clear();
+		}
+		MINTransfers = INF;
+		tempPath.clear();
+		Dijkstra(sta);
+		DFS(endsta);	
+		cout<<path.size()-1<<endl;
+		if(path.size() == 1) return 0;
+		int starts = path.size()-1,index = starts-1;
+		int upline = line[path[starts]][path[starts-1]];
+		while(index >= 1) {
+			int nowline = line[path[index]][path[index-1]];
+			if(nowline != upline) {
+				cout<<"Take Line#"<<upline<<" from "<<numToId[path[starts]]<<" to "<<numToId[path[index]]<<"."<<endl;
+				starts = index;
+				upline = nowline;
+			}
+			index--;
+		}
+		cout<<"Take Line#"<<upline<<" from "<<numToId[path[starts]]<<" to "<<numToId[path[index]]<<"."<<endl;
+	}
+	return 0;
+}
