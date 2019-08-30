@@ -1,0 +1,31 @@
+#include <iostream>
+using namespace std;
+const int maxn = 1005;
+bool col[maxn] = {false};
+bool row[maxn] = {false};
+bool diagonal[maxn*2] = {false};
+int main() {
+	int k,n,x;
+	cin>>k;
+	for(int i=0;i<k;i++){
+		fill(col,col+maxn,false);
+		fill(row,row+maxn,false);
+		fill(diagonal,diagonal+2*maxn,false);
+		bool flag = true;
+		cin>>n;
+		for(int j = 1;j<=n;j++){
+			cin >> x;
+			if(col[j] || row[x] || diagonal[j+x]){
+				flag = false;
+			}
+			else{
+				col[j] = true;
+				row[x] = true;
+				diagonal[j+x] = true;
+			}
+		}
+		if(flag) cout<<"YES"<<endl;
+		else cout<<"NO"<<endl;
+	}
+	return 0;
+}
