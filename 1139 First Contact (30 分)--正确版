@@ -1,0 +1,68 @@
+#include <iostream>
+#include <map>
+#include <vector>
+#include <algorithm>
+using namespace std;
+const int maxn = 300;
+struct ab{
+	int a,b;
+};
+int G[maxn][maxn];
+int N,M,k,num=0;
+map<string,int> nameToId;
+map<int,string> idToname;
+int toId(string str){
+	if(nameToId.find(str)==nameToId.end()){
+		nameToId[str] = num++;
+		idToname[nameToId[str]] = str;
+	}
+	return nameToId[str];
+}
+vector<int> fri[maxn];
+bool cmp(ab a1,ab a2){
+	if(idToname[a1.a]!=idToname[a2.a]) return idToname[a1.a]<idToname[a2.a];
+	else return idToname[a1.b]<idToname[a2.b];
+}
+int main(){
+	cin>>N>>M;
+	fill(G[0],G[0]+maxn*maxn,0); 
+	string id1,id2,id3,id4;
+	for(int i=0;i<M;i++){
+		cin>>id1>>id2;
+		if(id1.length()>4) id3 = id1.substr(1);
+		else id3 = id1;
+		if(id2.length()>4) id4 = id2.substr(1);
+		else id4 = id2;
+		int v1 = toId(id3);
+		int v2 = toId(id4);
+		if(id1.length()==id2.length()){
+			fri[v1].push_back(v2);
+			fri[v2].push_back(v1);
+		}
+		G[v1][v2] = G[v2][v1] = 1;
+	}
+	cin>>k;
+	string st,ed;
+	for(int i=0;i<k;i++){
+		vector<ab> ans;
+		cin>>st>>ed;
+		if(st.length()>4) st = st.substr(1);
+		if(ed.length()>4) ed = ed.substr(1);
+		int v1 = toId(st);
+		int v2 = toId(ed);
+		for(int j=0;j<fri[v1].size();j++){
+			for(int l=0;l<fri[v2].size();l++){
+				if(fri[v1][j] == v2 || fri[v2][l] == v1) continue;
+				if(G[fri[v1][j]][fri[v2][l]]==1){
+					ans.push_back(ab{fri[v1][j],fri[v2][l]});
+				}
+			}
+		}
+		sort(ans.begin(),ans.end(),cmp);
+		cout<<ans.size()<<endl;
+		for(int j=0;j<ans.size();j++){
+			cout<<idToname[ans[j].a]<<" "<<idToname[ans[j].b]<<endl;
+		}
+	}
+	return 0;
+}
