@@ -1,0 +1,63 @@
+#include <iostream>
+#include <map>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+const int maxn = 50005;
+struct student{
+	int Gp,Gm,Gf,G;
+	string name;
+}stu[maxn];
+map<string,int> nameToid;
+int num=0;
+int toId(string name){
+	if(nameToid.find(name)==nameToid.end()){
+		nameToid[name] = num++;
+	}
+	return nameToid[name];
+}
+void init(){
+	for(int i=0;i<maxn;i++){
+		stu[i].G = stu[i].Gm=stu[i].Gp=stu[i].Gf = -1;
+	}
+}
+bool cmp(student s1,student s2){
+	if(s1.G!=s2.G) return s1.G>s2.G;
+	else return s1.name < s2.name;
+}
+int p,m,n;
+int main() {
+	cin>>p>>m>>n;
+	init();
+	string name;
+	int score;
+	for(int i=0;i<p;i++){
+		cin>>name>>score;
+		int id = toId(name);
+		stu[id].Gp = score;
+		stu[id].name = name;
+	}
+	for(int i=0;i<m;i++){
+		cin>>name>>score;
+		int id = toId(name);
+		stu[id].Gm = score;
+		stu[id].name = name;
+	}
+    
+	for(int i=0;i<n;i++){
+		cin>>name>>score;
+		int id = toId(name);
+		stu[id].Gf = score;
+		stu[id].name = name;
+		if(stu[id].Gf>stu[id].Gm) stu[id].G = stu[id].Gf;
+		else stu[id].G = round((double)(stu[id].Gm*0.4 + stu[id].Gf*0.6));
+	}
+    
+	sort(stu,stu+num,cmp);
+	for(int i=0;i<num;i++){
+		if(stu[i].Gp>=200 && stu[i].G>=60 && stu[i].G<=100){
+			cout<<stu[i].name<<" "<<stu[i].Gp<<" "<<stu[i].Gm<<" "<<stu[i].Gf<<" "<<stu[i].G<<endl;
+		}
+	}
+	return 0;
+}
