@@ -1,0 +1,54 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+struct node{
+	int v;
+	int black;
+	node *lchild,*rchild;
+};
+void insert(node* &root,int data){
+	if(root==NULL) {
+		root = new node;
+		root->v = data;
+		root->lchild = root->rchild = NULL;
+		return;
+	}
+	if(abs(data) <=  abs(root->v))  insert(root->lchild,data);
+	else  insert(root->rchild,data);
+}
+int getBnum(node* root){
+	if(root==NULL) return 0;
+	int l = getBnum(root->lchild);
+	int r = getBnum(root->rchild);
+	return root->v>0?max(l,r)+1:max(l,r);
+}
+bool flag;
+void isBRtree(node* root){	
+	if(getBnum(root->lchild) != getBnum(root->rchild)) {
+		flag = false;
+	}
+	if(root->v < 0){
+		if(root->lchild != NULL && root->lchild->v < 0) flag = false;
+		if(root->rchild != NULL && root->rchild->v < 0) flag = false;
+	}
+	if(root->lchild!=NULL) isBRtree(root->lchild);
+	if(root->rchild!=NULL) isBRtree(root->rchild);
+}
+int main() {
+	int k,data,n; 
+	cin >> k;
+	for(int i=0;i<k;i++){
+		flag = true;
+		cin>>n;
+		node* root = NULL;
+		for(int j=0;j<n;j++){
+			cin >> data;
+			insert(root,data);
+		}
+		isBRtree(root);
+		if(root->v<0) flag = false;
+		if(flag) cout<<"Yes"<<endl;
+		else cout<<"No"<<endl;
+	}
+	return 0;
+}
