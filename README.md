@@ -82,3 +82,6 @@ rope 	绳
 chain  	链
 halved  	减半
 loops 环
+subtle 微妙
+get a crush on 迷恋
+analogously 类似
