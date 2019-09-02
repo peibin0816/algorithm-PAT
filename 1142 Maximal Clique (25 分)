@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+const int maxn = 205;
+int G[maxn][maxn],n,m,k,l;
+vector<int> ans;
+bool inq[maxn] = {false};
+int main(){
+	cin>>n>>m;
+	fill(G[0],G[0]+maxn*maxn,0);
+	int v1,v2,v3,v4;
+	for(int i=0;i<m;i++){
+		cin>>v1>>v2;
+		G[v1][v2] = G[v2][v1] = 1;
+	}
+	cin>>k;
+	for(int i=0;i<k;i++){
+		bool flag = true;
+		ans.clear();
+		cin>>l;
+		for(int j=0;j<l;j++){
+			cin>>v3;
+			ans.push_back(v3);
+			inq[maxn] = true;
+		}
+		for(int j=0;j<ans.size();j++){
+			for(int v=0;v<ans.size();v++){
+				if(j!=v && G[ans[j]][ans[v]] !=1){
+					flag = false;
+				}						
+			}
+		}
+		if(!flag) cout<<"Not a Clique"<<endl;
+		else{
+			flag = true;
+			for(int j=1;j<=n;j++){
+				int count = 0;
+				if(inq[j]==false){
+					for(int v=0;v<ans.size();v++){
+						if(G[j][ans[v]] == 1){
+							count++;
+						}
+					}
+				}
+				if(count==ans.size()) {
+					flag = false;
+					break;
+				}
+			}
+			if(flag) cout<<"Yes"<<endl;
+			else cout<<"Not Maximal"<<endl;
+		}
+	}	
+	return 0;
+}
