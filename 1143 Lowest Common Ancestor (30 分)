@@ -1,0 +1,67 @@
+#include <iostream>
+#include <set>
+#include <algorithm>
+using namespace std;
+const int maxn = 10005;
+struct node{
+	int v;
+	node *lchild,*rchild;
+};
+set<int> inq;
+int pre[maxn],in[maxn];
+node* creat(int preL,int preR,int inL,int inR){
+	if(preL>preR) return NULL;
+	node* root = new node;
+	root->v = pre[preL];
+	int k=0;
+	while(in[k]!=pre[preL])  k++;
+	int numleft = k-inL;
+	root->lchild = creat(preL+1,preL+numleft,inL,inL+numleft-1);
+	root->rchild = creat(preL+numleft+1,preR,inL+numleft+1,inR);
+	return root;
+}
+
+void LCA(node* root,int v1,int v2){
+	if(root==NULL) return;
+	if(root->v == v1){
+		printf("%d is an ancestor of %d.\n",v1,v2);
+		return;
+	}
+	else if(root->v == v2){
+		printf("%d is an ancestor of %d.\n",v2,v1);
+		return;
+	}
+	else if(root->v > v1 && root->v < v2 || root->v > v2 && root->v < v1){
+		printf("LCA of %d and %d is %d.\n",v1,v2,root->v);
+		return;
+	}
+	else if(root->v > v1 && root->v > v2) LCA(root->lchild,v1,v2);
+	else LCA(root->rchild,v1,v2);
+}
+int n,m;
+
+int main(){
+	cin>>m>>n;
+	int v1,v2,data;
+	node* root = NULL;
+	for(int i=0;i<n;i++){
+		cin>>data;
+		in[i] = pre[i] = data;
+		inq.insert(data);
+	}
+	sort(in,in+n);
+	root = creat(0,n-1,0,n-1);
+	for(int i=0;i<m;i++){
+		cin>>v1>>v2;
+		if(inq.find(v1)==inq.end()&&inq.find(v2)==inq.end()){
+			cout<<"ERROR: "<< v1 <<" and "<<v2<<" are not found."<<endl;
+		}else if(inq.find(v1)==inq.end()){
+			cout<<"ERROR: "<< v1 <<" is not found."<<endl;
+		}else if(inq.find(v2)==inq.end()){
+			cout<<"ERROR: "<< v2 <<" is not found."<<endl;
+		}else{
+			LCA(root,v1,v2);
+		}
+	}
+	return 0;
+}
