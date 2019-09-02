@@ -1,0 +1,30 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+	string ans,str;
+	int n;
+	cin >> str >> n;
+	if(n==1){
+		cout<<str<<endl;
+		return 0;
+	} 
+	for(int j=0;j<n-1;j++){
+		ans="";
+		int len = str.length();
+		int index = 0,num=0,i=0;
+		while(i<len){
+			ans += str[index];
+			while(str[index] == str[i]){
+				num++;
+				i++;
+			}
+			index = i;
+			ans += (num +'0');
+			num = 0;
+		}
+		str = ans;
+	}
+	cout<<ans<<endl;
+	return 0;
+}
