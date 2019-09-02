@@ -1,0 +1,29 @@
+#include <iostream>
+using namespace std;
+const int maxn = 50005;
+struct node{
+	int v;
+	node *lchild,*rchild;
+};
+int pre[maxn],in[maxn];
+bool flag = false;
+void creat(int preL,int preR,int inL,int inR){
+	if(preL>preR || flag) return;
+	int k=0;
+	while(in[k]!=pre[preL])  k++;
+	int numleft = k-inL;
+	creat(preL+1,preL+numleft,inL,inL+numleft-1);
+	creat(preL+numleft+1,preR,inL+numleft+1,inR);
+	if(flag == false){
+		cout<< pre[preL];
+		flag=true;
+	}
+}
+int main() {
+	int n;
+	cin>>n;
+	for(int i=0;i<n;i++) cin>>pre[i];
+	for(int i=0;i<n;i++) cin>>in[i];
+	creat(0,n-1,0,n-1);
+	return 0;
+}
