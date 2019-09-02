@@ -1,0 +1,56 @@
+#include <iostream>
+#include <map>
+#include <queue>
+using namespace std;
+const int maxn = 300;
+int G[maxn][maxn];
+int N,M,k,num=0;
+map<string,int> nameToId;
+map<int,string> idToname;
+int toId(string str){
+	if(nameToId.find(str)==nameToId.end()){
+		nameToId[str] = num++;
+		idToname[nameToId[str]] = str;
+	}
+	return nameToId[str];
+}
+bool inq[maxn] ={false};
+vector<int> pre[maxn];
+BFS(int v1,int v2){
+	queue<int> q;
+	q.push(v1);
+	inq[v1] = true;
+	while(!q.empty()){
+		int front = q.front();
+		q.pop();
+		cout<<idToname[front]<<endl;
+		//if(front == v2) break;		
+		for(int i=0;i<num;i++){
+			if(inq[i] == false && G[front][i]==1){
+				q.push(i);
+				pre[i].push_back(front);
+				inq[i] = true;
+			}		
+		}
+	}
+}
+int main(){
+	cin>>N>>M;
+	fill(G[0],G[0]+maxn*maxn,0); 
+	string id1,id2;
+	for(int i=0;i<M;i++){
+		cin>>id1>>id2;
+		int v1 = toId(id1);
+		int v2 = toId(id2);
+		G[v1][v2] = G[v2][v1] = 1;
+	}
+	cin>>k;
+	string st,ed;
+	for(int i=0;i<1;i++){
+		cin>>st>>ed;
+		int v1 = toId(st);
+		int v2 = toId(st);
+		BFS(v1,v2);
+	}
+	return 0;
+}
