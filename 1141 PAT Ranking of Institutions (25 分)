@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <cctype>
+using namespace std;
+const int maxn = 100005;
+struct school{
+	double score;
+	int count;
+	string name;
+}sch[maxn]; 
+map<string,int> schTonum;
+int num=0,n;
+int tonum(string sch){
+	if(schTonum.find(sch) == schTonum.end()){
+		schTonum[sch] = num++;
+	}
+	return schTonum[sch];
+}
+bool cmp(school s1,school s2){
+	if((int)s1.score != (int)s2.score) return (int)s1.score>(int)s2.score;
+	else if(s1.count != s2.count) return s1.count<s2.count;
+	else return s1.name<s2.name;
+}
+int main(){
+	cin>>n;
+	string idstr,school;
+	int score;
+	for(int i=0;i<n;i++){
+		cin>>idstr>>score>>school;
+		transform(school.begin(),school.end(),school.begin(),::tolower);
+		int id = tonum(school);
+		sch[id].name = school;
+		sch[id].count++;
+		char lev =  idstr[0];
+		if(lev == 'A') sch[id].score +=  (double)(score*1.0);
+		else if(lev == 'B') sch[id].score +=  (double)(score/1.5);
+		else sch[id].score += (double)(score*1.5);	
+	}
+	sort(sch,sch+num,cmp);
+	cout<<num<<endl;
+	int index = 1;
+	score = (int)sch[0].score;
+	for(int i=0;i<num;i++){
+		if((int)sch[i].score != score){
+			index = i+1;
+			score = (int)sch[i].score;
+		} 
+		cout<<index<<" "<<sch[i].name<<" "<<(int)sch[i].score<<" "<<sch[i].count<<endl;
+	}
+	return 0;
+}
