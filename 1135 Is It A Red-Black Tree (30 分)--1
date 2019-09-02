@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+struct node{
+	int v;
+	int black;
+	node *lchild,*rchild;
+};
+vector<int> pre,in,orgin;
+bool cmp(int a,int b){
+	return a<b;
+}
+node* creat(int preL,int preR,int inL,int inR,int b){
+	if(preL>preR) return NULL;
+	node* root = new node;
+	root->v = pre[preL];
+	root->black = b;
+	if(b==1) b=0;
+	else b=1; 
+	int k = inL;
+	while(in[k]!=pre[preL]) k++;
+	int numleft = k-inL;
+	root->lchild = creat(preL+1,preL+numleft,inL,inL+numleft-1,b);
+	root->rchild = creat(preL+numleft+1,preR,inL+numleft+1,inR,b);
+	return root;
+}
+int temp,sum,num;
+bool flag;
+void preOrder(node* root){
+	if(root->lchild == NULL && root->rchild == NULL) {
+		if(root->black==1){
+			temp++;
+			if(sum==-1) sum =temp;
+			else if(sum!=temp) flag = false;
+			temp--;
+		}		
+	}
+	if(root->black == 1){
+		if(orgin[num] != root->v) flag = false;
+		else num++;
+		temp++;
+	}else {
+		if(orgin[num] != -(root->v)) flag = false;
+		else num++;
+	}
+	if(root->lchild!=NULL) preOrder(root->lchild);
+	if(root->rchild!=NULL) preOrder(root->rchild);
+	if(root->black == 1) temp--;
+}
+void init(){
+		pre.clear();
+		in.clear();
+		orgin.clear();
+		temp=0;
+		sum=-1;
+		num=0;
+		flag = true;
+}
+int main() {
+	int k,data,n; 
+	cin >> k;
+	for(int i=0;i<k;i++){
+		init();
+		cin>>n;
+		for(int j=0;j<n;j++){
+			cin >> data;
+			orgin.push_back(data);
+			pre.push_back(abs(data));
+			in.push_back(abs(data));
+		}
+		sort(in.begin(),in.end(),cmp);
+		node* root = NULL;
+		int preL=0,preR=n-1;
+		int inL=0,inR=n-1;
+		root = creat(preL,preR,inL,inR,1);
+		preOrder(root);
+		if(flag) cout<<"Yes"<<endl;
+		else cout<<"No"<<endl;
+	}
+	return 0;
+}
