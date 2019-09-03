@@ -1,0 +1,34 @@
+#include <iostream>
+#include <vector>
+#include <set>
+using namespace std;
+const int maxn = 100005;
+int n,m,k;
+vector<int> noin[maxn];
+set<int> ship;
+int main(){
+	cin>>n>>m;
+	int id1,id2,id;
+	for(int i=0;i<n;i++){
+		cin>>id1>>id2;
+		noin[id1].push_back(id2);
+		noin[id2].push_back(id1);
+	}
+	for(int i=0;i<m;i++){
+		bool flag = true;
+		ship.clear();
+		cin>>k>>id1;
+		for(int v=0;v<noin[id1].size();v++) ship.insert(noin[id1][v]);
+		for(int j=1;j<k;j++){
+			cin>>id2;
+			if(ship.find(id2) != ship.end())
+				flag = false;
+			else{
+				for(int v=0;v<noin[id2].size();v++) ship.insert(noin[id2][v]);
+			}
+		}
+		if(flag) cout<<"Yes"<<endl;
+		else cout<<"No"<<endl;		
+	}
+	return 0;
+}
