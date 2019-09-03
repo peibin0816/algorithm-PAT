@@ -1,0 +1,24 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+int n,k;
+string str;
+bool isprime(string s){
+	int num = stoi(s);
+	for(int i=2;i<=sqrt(num);i++){
+		if(num%i == 0) return false;
+	}
+	return true;
+}
+int main(){
+	cin>>n>>k;
+	cin>>str;
+	int len = str.length();
+	for(int i=0;i<=len-k;i++){
+		if(isprime(str.substr(i,k))){
+			cout<<str.substr(i,k)<<endl;
+			return 0;			
+		}
+	}cout<<"404"<<endl;
+	return 0;
+}
