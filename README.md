@@ -85,3 +85,5 @@ loops 环
 subtle 微妙
 get a crush on 迷恋
 analogously 类似
+Quadratic probing 二次探测
+collisions.冲突。
