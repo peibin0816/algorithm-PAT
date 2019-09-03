@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <unordered_map>
+using namespace std;
+int n,m,chose;
+struct student {
+	string card;
+	int score;
+};
+string s;
+bool cmp(student &s1,student &s2) {
+	if(s1.score!=s2.score) return s1.score>s2.score;
+	else return s1.card<s2.card;
+}
+int main() {
+	cin>>n>>m;
+	vector<student> stu(n);
+	for(int i=0; i<n; i++) {
+		cin>>stu[i].card>>stu[i].score;
+	}
+	for(int i=0; i<m; i++) {
+		cin>>chose>>s;
+		printf("Case %d: %d %s\n", i+1, chose, s.c_str());
+		vector<student> ans;
+		int sumscore=0,count=0;
+		if(chose==1) {
+			for(int j=0; j<n; j++) {
+				if(stu[j].card[0]==s[0]) {
+					ans.push_back(stu[j]);
+				}
+			}
+		}else if(chose==2) {
+			for(int j=0; j<n; j++) {
+				if(stu[j].card.substr(1,3) == s) {
+					sumscore+=stu[j].score;
+					count++;
+				}
+			}
+			if(count==0) printf("NA\n");
+			else 
+			 printf("%d %d\n", count, sumscore);
+		} else {
+			unordered_map<string,int> m;
+			for(int j=0; j<n; j++) {
+				if(stu[j].card.substr(4,6) == s) {
+					m[stu[j].card.substr(1,3)]++;
+				}
+			}
+			for(auto it:m) {
+				ans.push_back({it.first,it.second});
+			}
+		}
+		if(chose==1 || chose==3) {
+			sort(ans.begin(),ans.end(),cmp);
+			for(int j=0; j<ans.size(); j++) {
+				printf("%s %d\n", ans[j].card.c_str(), ans[j].score);
+			}
+			if(ans.size() == 0) cout<<"NA"<<endl;
+		}
+	}
+	return 0;
+}
