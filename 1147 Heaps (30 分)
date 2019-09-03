@@ -1,0 +1,37 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+int n,m,num=0;
+bool ismaxHeap(vector<int> heap){
+	for(int i= heap.size()-1;i>1;i--){
+		if(heap[i] > heap[i/2])
+			return false;
+	}
+	return true;
+}
+bool isminHeap(vector<int> heap){
+	for(int i= heap.size()-1;i>1;i--){
+		if(heap[i] < heap[i/2])
+			return false;
+	}
+	return true;
+}
+void post(vector<int> heap,int k){
+	if(2*k<=n) post(heap,2*k);
+	if(2*k+1 <=n) post(heap,2*k+1);
+	printf("%s%d",num++==0?"":" ",heap[k]);
+}
+int main(){
+	cin>>m>>n;
+	for(int i=0;i<m;i++){
+		vector<int> heap(n+1);
+		num=0;
+		for(int j=1;j<=n;j++) cin>>heap[j];
+		if(ismaxHeap(heap)) cout<<"Max Heap"<<endl;
+		else if(isminHeap(heap)) cout<<"Min Heap"<<endl;
+	 	else cout<<"Not Heap"<<endl;
+		post(heap,1);
+		cout<<endl;
+	}
+	return 0;
+}
