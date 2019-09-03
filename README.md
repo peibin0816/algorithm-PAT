@@ -87,3 +87,6 @@ get a crush on 迷恋
 analogously 类似
 Quadratic probing 二次探测
 collisions.冲突。
+vertex 	顶点
+labeling  标签
+vertices 顶点
