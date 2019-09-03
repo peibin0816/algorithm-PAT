@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+const int maxn = 1005;
+vector<int> adj[maxn];
+int deg[maxn] = {0};
+int temp[maxn] ={0};
+int n,m,k;
+int main(){
+	cin>>n>>m;
+	int v1,v2,v,count=0; 
+	for(int i=0;i<m;i++){
+		cin>>v1>>v2;
+		adj[v1].push_back(v2);
+		deg[v2]++;
+	}
+	cin>>k;
+	for(int i=0;i<k;i++){
+		for(int j=0;j<=n;j++){
+			temp[j] = deg[j];
+		}
+		bool flag = true;
+		for(int j=0;j<n;j++){
+			cin>>v;
+			if(temp[v] != 0) flag = false;
+			for(int l = 0;l<adj[v].size();l++){
+				temp[adj[v][l]]--;
+			}
+ 		}
+ 		if(!flag){
+ 			if(count++!=0) cout<<" ";
+ 			cout<<i;
+		}
+	}	
+	return 0;
+}
