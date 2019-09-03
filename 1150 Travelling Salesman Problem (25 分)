@@ -1,0 +1,41 @@
+#include <iostream>
+using namespace std;
+const int maxn = 222;
+const int INF = 100005;
+int N,m,k;
+int G[maxn][maxn];
+int inq[maxn];
+int minindex,minDis = INF;
+int main(){
+	cin>>N>>m;
+	fill(G[0],G[0]+maxn*maxn,INF);
+	int v1,v2,dis;
+	for(int i=0;i<m;i++){
+		cin>>v1>>v2>>dis;
+		G[v1][v2]= G[v2][v1] = dis;
+	}
+	cin>>k;
+	for(int i=1;i<=k;i++){
+		printf("Path %d: ",i);
+		int n,c1,c2,cnt=0,tag=0,d = 0; //tag = 0,simple路径 
+		fill(inq,inq+maxn,0);    //判断此节点是否访问过 
+		cin>>n>>c1;
+		while(--n){
+			cin>>c2;
+			if(G[c1][c2] != INF||tag==2){
+				if(!inq[c2]) inq[c2] = 1,++cnt;
+				else tag = 1;   //有重复节点 
+				d+=G[c1][c2];
+				c1=c2;
+			}else tag = 2;	//	有不通路径 
+		}
+		if(tag!=2) printf("%d ",d);
+		else printf("NA ");
+		if(cnt==N && tag==0) printf("(TS simple cycle)\n");
+		else if(tag==1&&cnt==N) printf("(TS cycle)\n");
+		else printf("(Not a TS cycle)\n");
+		if(tag!=2&&cnt==N&&minDis>d) minindex=i,minDis=d;		
+	}
+	printf("Shortest Dist(%d) = %d",minindex,minDis);
+	return 0;
+}
