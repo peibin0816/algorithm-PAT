@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+bool isPrime(int a){
+	for(int i=2;i<sqrt(a)+1;i++){
+		if(a%i==0) return false;
+	}
+	return true;
+}
+int main(){
+	int keys,count = 0,msize,n,m;
+	cin>>msize>>n>>m;
+	while(!isPrime(msize)) msize++;
+	vector<int> hashTable(msize,-1);
+	for(int i=0;i<n;i++){
+		cin >> keys;
+		int k=0;
+		while(k < msize){
+			int index = (keys%msize+k*k)%msize;
+			if(hashTable[index] == -1){
+				hashTable[index] = keys;
+				break;
+			}
+			k++;
+		}
+		if(k==msize) printf("%d cannot be inserted.\n",keys);
+	}
+	for(int i=0;i<m;i++){
+		cin >> keys;
+		int k=0;
+		while(k <= msize){
+			count++;
+			int index = ((keys%msize)+k*k)%msize;
+			if(hashTable[index] == keys || hashTable[index] == -1){
+				break;
+			}
+			k++;	
+		}		
+	}
+	printf("%.1f",(double)count/m);
+	return 0;
+}
