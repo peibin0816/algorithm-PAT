@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+const int maxn = 1000;
+vector<int> tree;
+int n,num=0,tag = 0;
+vector<int> tempPath,path[maxn];
+void DFS(int i){
+	if(2*i>n && 2*i+1>n){
+		tempPath.push_back(tree[i]);
+		path[num++] = tempPath;
+		tempPath.pop_back();
+	}
+	tempPath.push_back(tree[i]);
+	if(2*i+1 <=n ) DFS(2*i+1);
+	if(2*i <=n ) DFS(2*i);
+	tempPath.pop_back();
+}
+int main() {
+	cin>>n;
+	tree.resize(2*n,-1);
+	for(int i=1;i<=n;i++) cin>>tree[i];
+	DFS(1);
+	bool flag = true;
+	for(int i=0;i<num;i++){
+		int front = path[i][0];
+		cout << front;
+		for(int j=1;j<path[i].size();j++){
+			cout <<" "<< path[i][j];
+			if((tag ==1 && front<=path[i][j]) || (tag ==2 && front>=path[i][j])) flag = false;
+			if(front >= path[i][j]) tag = 1;
+			if(front <= path[i][j]) tag = 2;
+			front = path[i][j];
+		}
+		cout<<endl;
+	}
+	if(!flag) cout<<"Not Heap"<<endl;
+	else{
+		if(tag==1) cout<<"Max Heap"<<endl;
+		else if (tag == 2)cout<<"Min Heap"<<endl;
+	}
+	return 0;
+} 
