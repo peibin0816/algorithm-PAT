@@ -1,0 +1,96 @@
+#include <iostream>
+#include <map>
+#include <vector>
+#include <cctype>
+#include <cmath>
+using namespace std;
+const int maxn = 33;
+struct node{
+	int v;
+	int height; 
+	node *lchild,*rchild;
+};
+vector<int> par(maxn,-1),sib(maxn,-1),lef(maxn,-1),rig(maxn,-1),lev(maxn,-1);
+int post[maxn],in[maxn];
+node* creat(int postL,int postR,int inL,int inR){
+	if(postL>postR) return NULL;
+	node* root = new node;
+	root->v = post[postR];
+	int k=inL;
+	while(in[k]!=post[postR]) k++;
+	int numleft = k-inL;
+	root->lchild = creat(postL,postL+numleft-1,inL,inL+numleft-1);
+	root->rchild = creat(postL+numleft,postR-1,inL+numleft+1,inR);
+	return root;
+}
+int tagFull = 1;
+void BFS(node* root,int deep){
+	if(root==NULL) return;
+	int cnt = 0;
+	if(root->lchild != NULL) cnt++;
+	if(root->rchild != NULL) cnt++;
+	if(cnt==1) tagFull = 0;
+ 	lev[root->v] = deep;
+ 	lef[root->v] = root->lchild==NULL?-1:root->lchild->v;
+ 	rig[root->v] = root->rchild==NULL?-1:root->rchild->v;
+ 	if(root->lchild!=NULL) sib[root->lchild->v] = root->rchild==NULL?-1:root->rchild->v;
+ 	if(root->rchild!=NULL) sib[root->rchild->v] = root->lchild==NULL?-1:root->lchild->v;
+ 	if(root->lchild!=NULL) par[root->lchild->v] = root->v;
+ 	if(root->rchild!=NULL) par[root->rchild->v] = root->v;
+	BFS(root->lchild,deep+1);
+	BFS(root->rchild,deep+1);
+}
+int k,n,m;
+int main() {
+	cin>>n;
+	for(int i=1;i<=n;i++) cin>>post[i];
+	for(int i=1;i<=n;i++) cin>>in[i];
+	node* root = creat(1,n,1,n);
+	BFS(root,1);
+	cin>>k;
+	getchar();
+	while(k--){
+		string str;
+		getline(cin,str);
+		int a,b;
+		if(str.find("root")<str.length()){
+			int r = stoi(str);
+			if(root->v==r) cout<<"Yes"<<endl;
+			else cout<<"No"<<endl;
+		}else if(str.find("siblings")<str.length()){
+			int index = str.find("and");
+			a = stoi(str.substr(0));
+			b = stoi(str.substr(index+4));
+			if(sib[a]==b) cout<<"Yes"<<endl;
+			else cout<<"No"<<endl;
+		}else if(str.find("parent")<str.length()){
+			int index = str.find("of");
+			a = stoi(str.substr(0));
+			b = stoi(str.substr(index+3));
+			if(par[b] == a ) cout<<"Yes"<<endl;
+			else cout<<"No"<<endl;
+		}else if(str.find("left")<str.length()){
+			int index = str.find("of");
+			a = stoi(str.substr(0));
+			b = stoi(str.substr(index+3));
+			if(lef[b]==a)cout<<"Yes"<<endl;
+			else cout<<"No"<<endl;
+		}else if(str.find("right")<str.length()){
+			int index = str.find("of");
+			a = stoi(str.substr(0));
+			b = stoi(str.substr(index+3));
+			if(rig[b]==a)cout<<"Yes"<<endl;
+			else cout<<"No"<<endl;
+		}else if(str.find("level")<str.length()){
+			int index = str.find("and");
+			a = stoi(str.substr(0));
+			b = stoi(str.substr(index+4));
+			if(lev[a]==lev[b])cout<<"Yes"<<endl;
+			else cout<<"No"<<endl;
+		}else if(str.find("full ")<str.length()){
+			if(tagFull) cout<<"Yes"<<endl;
+			else cout<<"No"<<endl;
+		}
+	}
+	return 0;
+}
