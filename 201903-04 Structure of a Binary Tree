@@ -52,45 +52,41 @@ int main() {
 	while(k--){
 		string str;
 		getline(cin,str);
+		bool flag = true;
 		int a,b;
 		if(str.find("root") !=str.npos){
 			int r = stoi(str);
-			if(root->v==r) cout<<"Yes"<<endl;
-			else cout<<"No"<<endl;
+			if(root->v!=r) flag = false;
 		}else if(str.find("siblings")!=str.npos){
 			int index = str.find("and");
 			a = stoi(str.substr(0));
 			b = stoi(str.substr(index+4));
-			if(sib[a]==b) cout<<"Yes"<<endl;
-			else cout<<"No"<<endl;
+			if(sib[a]!=b) flag = false;
 		}else if(str.find("parent")!=str.npos){
 			int index = str.find("of");
 			a = stoi(str.substr(0));
 			b = stoi(str.substr(index+3));
-			if(par[b] == a ) cout<<"Yes"<<endl;
-			else cout<<"No"<<endl;
+			if(par[b] != a ) flag = false;
 		}else if(str.find("left")!=str.npos){
 			int index = str.find("of");
 			a = stoi(str.substr(0));
 			b = stoi(str.substr(index+3));
-			if(lef[b]==a)cout<<"Yes"<<endl;
-			else cout<<"No"<<endl;
+			if(lef[b]!=a) flag = false;
 		}else if(str.find("right")!=str.npos){
 			int index = str.find("of");
 			a = stoi(str.substr(0));
 			b = stoi(str.substr(index+3));
-			if(rig[b]==a)cout<<"Yes"<<endl;
-			else cout<<"No"<<endl;
+			if(rig[b]!=a) flag = false;
 		}else if(str.find("level")!=str.npos){
 			int index = str.find("and");
 			a = stoi(str.substr(0));
 			b = stoi(str.substr(index+4));
-			if(lev[a]==lev[b]) cout<<"Yes"<<endl;
-			else cout<<"No"<<endl;
+			if(lev[a]!=lev[b]) flag = false;
 		}else if(str=="It is a full tree"){
-			if(tagFull) cout<<"Yes"<<endl;
-			else cout<<"No"<<endl;
+			if(!tagFull) flag = false;
 		}
+		if(flag) cout<<"Yes"<<endl;
+		else cout<<"No"<<endl;
 	}
 	return 0;
 }
