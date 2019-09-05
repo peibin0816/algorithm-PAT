@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <set>
+using namespace std;
+const int maxn = 1002;
+int G[maxn][maxn];
+int k,n,m;
+vector<int> sus,father(maxn,-1);
+set<int> ans[maxn];
+int findfather(int a){
+	while(father[a] != a){
+		a = father[a];
+	}
+	return a;
+}
+void unions(int a,int b){
+	int faA = findfather(a);
+	int faB = findfather(b);
+	if(faA != faB) {
+		if(faA<faB) swap(faA,faB);
+		father[faA] = faB;
+	}
+}
+int main(){
+ 	cin>>k>>n>>m;
+ 	fill(G[0],G[0]+maxn*maxn,0);
+ 	int v1,v2,val;
+ 	for(int i=0;i<m;i++){
+ 		cin>>v1>>v2>>val;
+ 		G[v1][v2] += val;		
+	}
+	for(int i=1;i<=n;i++){
+		int cnt=0,callback=0;
+		for(int j=1;j<=n;j++){
+			if(G[i][j] != 0 && G[i][j] <= 5 ){
+				cnt++;
+				if(G[j][i]!=0) callback ++;
+			}
+		}
+		if(cnt > k){
+			sus.push_back(i);
+			if(cnt>0 && 1.0*callback > cnt*0.2 ) {
+				sus.pop_back();
+			}else father[i] = i;
+		}
+	}
+	if(sus.size()==0) cout<<"None"<<endl;
+	else{
+		for(int i=0;i<sus.size();i++){
+			for(int j=i+1;j<sus.size();j++){
+				if(G[sus[i]][sus[j]]>0 && (G[sus[j]][sus[i]]>0)){
+					unions(sus[i],sus[j]);
+				}
+			}
+		}
+		for(int i=0;i<maxn;i++){
+			if(father[i]!=-1){
+				int root = findfather(i);
+				ans[root].insert(i);
+			}
+		}
+		for(int i=0;i<maxn;i++){
+			if(ans[i].size()==0) continue;
+			for(auto it = ans[i].begin();it!=ans[i].end();it++){
+				if(it!=ans[i].begin()) cout<<" ";
+				cout<<*it;
+			}
+			cout<<endl;
+		}		
+	}	
+	return 0;
+	
+}
