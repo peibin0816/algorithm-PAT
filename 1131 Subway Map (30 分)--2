@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+const int maxn = 10001;
+const int INF = 10000000;
+int n,k,m,frontS,nextS,startS,endS;
+int mincnt = INF,mintraf = INF;
+bool vis[maxn] = {false};
+vector<int> adj[maxn],tempPath,path;
+unordered_map<int, int> line;
+void DFS(int v) {
+    vis[v] = true;
+	if(v == endS){
+		tempPath.push_back(v);
+		int tranfcnt = 0;
+		for(int i=0;i<tempPath.size()-2;i++){
+			if(line[tempPath[i]*10000+tempPath[i+1]] != (line[tempPath[i+1]*10000+tempPath[i+2]])){
+				tranfcnt++;
+			}
+		}
+		if(tempPath.size() < mincnt){
+			mincnt = tempPath.size();
+			mintraf = tranfcnt;
+			path = tempPath;			
+		}else if(tempPath.size() == mincnt){
+			if(tranfcnt < mintraf){
+				mintraf = tranfcnt;
+				path = tempPath;
+			}
+		}
+		tempPath.pop_back();
+	}
+	tempPath.push_back(v);
+	for(int i=0;i<adj[v].size();i++){
+		if(vis[adj[v][i]] == false){
+			vis[adj[v][i]] = true;
+			DFS(adj[v][i]);
+			vis[adj[v][i]] = false;	
+		}
+	}
+	vis[v] = false;
+	tempPath.pop_back();
+}
+int main() {
+	cin>>n;	
+	for(int i=1; i<=n; i++){
+		cin>>m>>frontS;
+		for(int j=1;j<m;j++) {
+			cin >> nextS;
+			adj[frontS].push_back(nextS);
+			adj[nextS].push_back(frontS);
+			line[frontS*10000+nextS] = line[nextS*10000+frontS] = i;
+			frontS = nextS;
+		}
+	}
+	cin>>k;
+	for(int i=0; i<k; i++){
+		tempPath.clear();
+		path.clear();
+		mincnt = mintraf = INF;
+		fill(vis,vis+maxn,false);
+		cin >> startS >> endS;
+		DFS(startS);
+		cout<<mincnt-1<<endl;
+		int starts = 0,index = starts+1;
+		int upline = line[path[starts]*10000+ path[index]];
+		while(index < path.size()-1) {
+			int nowline = line[path[index]*10000+path[index+1]];
+			if(nowline != upline) {
+				printf("Take Line#%d from %04d to %04d.\n",upline,path[starts],path[index]);
+				starts = index;
+				upline = nowline;
+			}
+			index++;
+		}
+		printf("Take Line#%d from %04d to %04d.\n",upline,path[starts],path[index]);
+	}
+	return 0;
+}
