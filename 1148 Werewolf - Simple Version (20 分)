@@ -1,26 +1,27 @@
 #include <iostream>
+#include <cmath>
 #include <vector>
 using namespace std;
 int n;
 int main(){
 	cin>>n;
-	vector<int> stm(n+1);
-	for(int i=1;i<=n;i++){
-		cin>>stm[i];
-	}
+	vector<int> sta(n+1);
+	for(int i=1;i<=n;i++) cin >> sta[i];
 	for(int i=1;i<=n;i++){
 		for(int j=i+1;j<=n;j++){
-			vector<int> lie,a(n+1,1);
-			a[i] = a[j] = -1;
-			for(int k=1;k<=n;k++){
-				if(stm[k] * a[abs(stm[k])] < 0) lie.push_back(k);
+			vector<int> lies,judge(n+1,1);
+			judge[i] = judge[j] = -1;
+			for(int v=1;v<=n;v++){
+				if(sta[v]*judge[abs(sta[v])]<0){
+					lies.push_back(v);
+				}
 			}
-			if(lie.size() == 2 && a[lie[0]] + a[lie[1]] == 0){
+			if(lies.size()==2 && judge[lies[0]]*judge[lies[1]]<0){
 				cout<<i<<" "<<j<<endl;
 				return 0;
-			}
+			}	
 		}
 	}
-	cout<<"No Solution"<<endl;
+	cout<<"No Solution"<<endl;	
 	return 0;
-}
+} 
