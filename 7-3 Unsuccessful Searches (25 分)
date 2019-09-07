@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+const int maxn = 1111;
+const int INF = 10000000;
+int G[maxn][maxn];
+int na,ns,m,k;
+int mindis=INF,mincount = INF,maxcar = -1;
+vector<int> tempPath,path,avinum;
+bool vis[maxn] = {false};
+void DFS(int quy) {
+	vis[quy] = true;
+	if(quy > ns) {
+		tempPath.push_back(quy);
+		int sumdis = 0;
+		for(int i=0; i< tempPath.size()-1; i++) {
+			sumdis += G[tempPath[i]][tempPath[i+1]];
+		}
+		if(avinum[quy-ns] > 0) {
+			if(mindis > sumdis) {
+				path = tempPath;
+				mindis = sumdis;
+				maxcar=avinum[quy-ns];
+				mincount = tempPath.size();
+			}else if(mindis==sumdis && maxcar < avinum[quy-ns]){
+					maxcar = avinum[quy-ns];
+					mincount = tempPath.size();
+					path = tempPath;
+			}else if(mindis==sumdis && maxcar == avinum[quy-ns] && tempPath.size() < mincount) {
+					mincount = tempPath.size();
+					path = tempPath;
+			}
+		}
+		tempPath.pop_back();
+		return;
+	}
+	tempPath.push_back(quy);
+	for(int i=0; i<maxn; i++) {
+		if(vis[i]==false && G[quy][i]<INF) {
+			vis[i]=true;
+			DFS(i);
+			vis[i]=false;
+		}
+	}
+	vis[quy] = false;
+	tempPath.pop_back();
+}
+int main() {
+	fill(G[0],G[0]+maxn*maxn,INF);
+	cin>>ns>>na;
+	avinum.resize(na+1);
+	for(int i=1; i <= na; i++) cin >> avinum[i];
+	cin>>m;
+	string v1,v2,str;
+	int time,quy;
+	for(int i=0; i<m; i++) {
+		cin>>v1>>v2>>time;
+		int n1 = v1[0]=='A'?stoi(v1.substr(2))+ns:stoi(v1);
+		int n2 = v2[0]=='A'?stoi(v2.substr(2))+ns:stoi(v2);
+		G[n1][n2] = G[n2][n1] = time;
+	}
+	cin>>k;
+	for(int i=0; i<k; i++) {
+		fill(vis,vis+maxn,false);
+		path.clear();
+		tempPath.clear();
+		maxcar = -1;
+		mincount = mindis = INF;
+		cin>>quy;
+		DFS(quy);
+		if(path.size() == 0) cout <<"All Busy"<<endl;
+		else {
+			avinum[path[path.size()-1]-ns]--;
+			for(int j = path.size()-1; j>=0; j--) {
+				str = path[j]>ns? ("A-"+ to_string(path[j]-ns)):to_string(path[j]);
+				cout<<str;
+				if(j!=0) cout<<" ";
+			}
+			cout<<endl<<mindis<<endl;
+		}
+	}
+	return 0;
+}
