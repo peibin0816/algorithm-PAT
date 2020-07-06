@@ -16,6 +16,7 @@ int main(){
 	int len = str.length();
 	for(int i=0;i<=len-k;i++){
 		if(isprime(str.substr(i,k))){
+			//cout << num <<endl;   //转换过的num有可能是3，而答案必须考虑全00003
 			cout<<str.substr(i,k)<<endl;
 			return 0;			
 		}
