@@ -61,3 +61,76 @@ int main() {
 	}
 	return 0;
 }
+
+
+
+
+
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<algorithm>
+using namespace std;
+struct pat {
+	string id;
+	int score;
+
+};
+bool cmp(pat &a,pat &b) {
+	if(a.score != b.score) return a.score>b.score;
+	else return a.id<b.id;
+}
+int n,m,score,type;
+string id,trem;
+int main() {
+	cin>>n>>m;
+	vector<pat> card(n);
+	for(int i=0; i<n; i++) {
+		cin>>card[i].id>>card[i].score;
+		//card.push_back({id,score});
+	}
+	for(int i=1; i<=m; i++) {
+		int nt=0,ns=0;
+		cin>>type>>trem;
+		vector<pat> res;
+		printf("Case %d: %d %s\n", i, type, trem.c_str());
+		if(type==1) {
+			for(pat p : card) {
+				if(p.id[0] == trem[0]) {
+					res.push_back({p.id, p.score});
+				}
+			}
+		} else if(type==2) {
+			for(pat p : card) {
+				if(p.id.substr(1,3) == trem) {
+					nt++;
+					ns+=p.score;
+				}
+			}
+			if(nt==0) cout<<"NA"<<endl;
+			else printf("%d %d\n", nt, ns);
+		} else if(type==3) {
+			unordered_map<string,int> ans;
+			for(pat p : card) {
+				if(p.id.substr(4,6) == trem) {
+					ans[p.id.substr(1,3)]++;
+				}
+			}
+			for(auto it:ans) {
+				res.push_back({it.first,it.second});
+			}
+		}
+
+		if(type==1 || type == 3) {
+			if(res.size()==0) cout<<"NA"<<endl;
+			else {
+				sort(res.begin(),res.end(),cmp);
+				for(pat it:res) {
+					printf("%s %d\n", it.id.c_str(), it.score);
+				}
+			}
+
+		}
+	}
+	return 0;
+}
