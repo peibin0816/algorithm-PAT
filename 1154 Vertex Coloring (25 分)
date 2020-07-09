@@ -31,3 +31,45 @@ int main() {
 	}
 	return 0;
 }
+
+
+#include <iostream>
+#include <vector>
+#include <set>
+using namespace std;
+
+struct edge{
+	int st,ed;	
+}eds[10002]; 
+int n,m,k;
+int val[10002]={0};
+
+int check(){
+	for(int i=0;i<m;i++){
+		if(val[eds[i].st] == val[eds[i].ed]) return -1;
+	}
+	return 0; 
+}
+int main(){	
+	cin>>n>>m;
+	for(int i=0;i<m;i++){
+		cin>>eds[i].st>>eds[i].ed;
+	}
+	cin>>k;
+	for(int i=0;i<k;i++){
+		set<int> ans;
+		for(int j=0;j<n;j++){
+			cin>>val[j];
+			ans.insert(val[j]);
+			/*如果用hash这里会段错误
+			if(hashC[val[j]]!=0){
+				ans++;
+				//hashC[val[j]]=1;
+			}
+			*/
+		}
+		if(check() == -1) cout<<"No"<<endl;
+		else cout<<ans.size()<<"-coloring"<<endl;
+	}
+	return 0;
+}
